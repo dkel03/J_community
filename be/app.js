@@ -4,9 +4,16 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var cors = require('cors');
+const mongoose = require("mongoose");
 
 var app = express();
 var apiRouter = require('./routes/api');
+
+//mongoose connection
+mongoose.connect('mongodb://localhost:27017/J_community', (err) => {
+	if(err) return console.error(err);
+	console.log("mongoose connected!!");
+})
 
 // view engine setup
 app.use(logger('dev'));
