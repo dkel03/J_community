@@ -9,6 +9,7 @@ const mongoose = require("mongoose");
 var app = express();
 var apiRouter = require('./routes/api');
 
+const Suggestion = require('./models/suggestions')
 //mongoose connection
 mongoose.connect('mongodb://localhost:27017/J_community', (err) => {
 	if(err) return console.error(err);

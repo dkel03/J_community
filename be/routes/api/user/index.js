@@ -16,15 +16,42 @@ router.get('/', function(req,res,next){
 });
 
 router.post('/', function(req,res,next){
-	res.send({success: true, msg: "post methods"});
+	const { title, context, createdAt } = req.body
+	const s = new Suggestion({ title, context, createdAt });
+	s.save()
+	.then(r => {
+		res.send({success: true, msg: r});
+	})
+	.catch(e => {
+		res.send({ success: 'failed', msg: e.message});
+	})	
+	//res.send({success: true, msg: "post methods"});
 });
 
-router.put('/', function(req,res,next){
-	res.send({success: true, msg: "put methods"});
+router.put('/:id', (req, res, next) => {
+	const id = req.params.id
+	const { title, context } = req.body
+	Suggestion.updateOne({_id: id}, {$set: {title, context}})
+	.then(r => {
+		res.send({success: true, msg: r});
+	})
+	.catch(e => {
+		res.send({ success: 'failed', msg: e.message});
+	})
+	
+	// res.send({ success: true, msg: 'put ok' })
 });
 
-router.delete('/', function(req,res,next){
-	res.send({success: true, msg: "del methods"});
+router.delete('/:id', function(req,res,next){
+	const id = req.params.id
+	Suggestion.deleteOne({_id: id})
+	.then(r => {
+		res.send({success: true, msg: r});
+	})
+	.catch(e => {
+		res.send({ success: 'failed', msg: e.message});
+	})
+	//res.send({success: true, msg: "del methods"});
 });
 
 
