@@ -13,13 +13,20 @@ export default new Router({
       name: 'home',
       component: Home
     },
-    {
-      path: '/user',
-      name: '사용자',
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "about" */ './views/user.vue')
-    }
+	  {
+      path: '/suggestion',
+      name: '건의사항',
+      component: () => import('./views/suggestion.vue')
+    },
+	  {
+      path: '/suggestion/detail/:suggestionId',
+      name: '건의사항 상세',
+      component: () => import('./views/suggestion_detail.vue')
+    },
+	  {
+      path: '/sign',
+      name: '로그인',
+      component: () => import('./views/sign')
+    },
   ]
 })

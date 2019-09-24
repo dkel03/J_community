@@ -22,18 +22,37 @@
 
     <v-app-bar
       app
-      color="indigo"
+      color="green"
       dark
     >
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-      <v-toolbar-title>중대숲</v-toolbar-title>
+      <v-toolbar-title @click="$router.push('/')">중대숲</v-toolbar-title>
+      <v-spacer></v-spacer>
+      <v-menu left top>
+        <template v-slot:activator="{ on }">
+          <v-btn icon v-on="on">
+            <v-icon>more_vert</v-icon>
+          </v-btn>
+        </template>
+        <v-list>
+          <v-list-item @click="$router.push('/')">
+            <v-list-tile-title>홈으로</v-list-tile-title>
+          </v-list-item>
+          <v-list-item @click="$router.push('/sign')">
+            <v-list-tile-title>로그인</v-list-tile-title>
+          </v-list-item>
+          <v-list-item @click="signOut">
+            <v-list-tile-title>로그아웃</v-list-tile-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
     </v-app-bar>
 
     <v-content>
       <router-view/>
     </v-content>
     <v-footer
-      color="indigo"
+      color="green"
       app
     >
       <span class="white--text">&copy; 2019</span>
@@ -61,6 +80,27 @@ export default {
         title: '사용자관리',
         to: {
           path: '/user'
+        }
+      },
+      {
+        icon: 'chat',
+        title: '건의사항',
+        to: {
+          path: '/suggestion'
+        }
+      },
+      {
+        icon: 'email',
+        title: '마음의 편지함',
+        to: {
+          path: '/aa'
+        }
+      },
+      {
+        icon: 'gps_fixed',
+        title: 'GPS기반 복귀체계',
+        to: {
+          path: '/#'
         }
       }
     ]

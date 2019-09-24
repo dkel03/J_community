@@ -2,7 +2,7 @@
   <v-container grid-list-md text-xs-center>
     <v-layout row wrap>
       <v-flex xs12 sm6 md4 v-for="sug in suggestions" :key="sug._id">
-        <v-card max-width="344" min-width="320" class="mx-auto">
+        <v-card max-width="344" class="mx-auto">
           <v-card-title>{{sug.title}}</v-card-title>
           <v-card-text><span>{{sug.createdAt}}</span></v-card-text>
           <v-card-text>{{sug.context}}</v-card-text>
@@ -30,7 +30,7 @@
       </v-flex>
     </v-layout>
 
-    <v-btn absolute dark fab bottom right color="green" @click="mdUp">
+    <v-btn absolute dark fab bottom right color="green darken-4" @click="mdUp">
     <v-icon>add</v-icon>
 	</v-btn>
 
@@ -62,7 +62,7 @@
     
     <v-snackbar v-model="snackbar">
       {{ sbMsg }}
-      <v-btn color="pink" flat @click="snackbar = false"> Close </v-btn>
+      <v-btn color="green darken-3" flat @click="snackbar = false"> Close </v-btn>
     </v-snackbar>
   
   </v-container>
@@ -89,13 +89,16 @@ export default{
   methods: {
     mdUp () {
       this.dialog =true
+      this.updateMode=false
       this.sug_title = ''
       this.sug_context=''
     },
+
     pop (msg) {
 	   this.snackbar = true,
 	   this.sbMsg = msg
     },
+
     putDialog(sug) {
       this.putId = sug._id
       this.dialog = true
@@ -103,9 +106,10 @@ export default{
       this.sug_context = sug.context
       this.updateMode = true
     },
-
+	
+	//API 관련 Methods
 	getUsers() {
-      axios.get('https://nemv-stack.run.goorm.io/api/user')
+      axios.get('https://nemv-stack.run.goorm.io/api/suggestion')
       .then((r) => {
         this.suggestions = r.data.suggestions
       })
@@ -121,7 +125,7 @@ export default{
       console.log(this.sug_title, this.sug_context);
       this.dialog = false;
       //this.pop(this.sug_title);
-      axios.post('https://nemv-stack.run.goorm.io/api/user', {
+      axios.post('https://nemv-stack.run.goorm.io/api/suggestion', {
         title: this.sug_title, context: this.sug_context, createdAt: ISODate.toString()
       })
       .then((r) => {
@@ -132,13 +136,13 @@ export default{
       .catch((e) => {
         // console.error(e.message)
         this.pop(e.message)
-      }) //api에 post 요청
+      }) //api에 post 요청//api에 post 요청
     },
 
 	putUser() {
       this.dialog=false
       this.updateMode=false
-      axios.put(`https://nemv-stack.run.goorm.io/api/user/${this.putId}`, {
+      axios.put(`https://nemv-stack.run.goorm.io/api/suggestion/${this.putId}`, {
         title: this.sug_title, context: this.sug_context
       })
       .then((r) => {
@@ -151,7 +155,7 @@ export default{
     },
 
     delUser(id) {
-      axios.delete(`https://nemv-stack.run.goorm.io/api/user/${id}`)
+      axios.delete(`https://nemv-stack.run.goorm.io/api/suggestion/${id}`)
       .then((r) => {
         this.pop('건의사항 삭제 완료')
         this.getUsers()
