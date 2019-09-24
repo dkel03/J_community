@@ -22,6 +22,11 @@
         </v-card>
       </v-flex>
     </v-layout>
+    
+    <v-snackbar v-model="snackbar">
+      {{ sbMsg }}
+      <v-btn color="error" flat @click="snackbar = false"> Close </v-btn>
+    </v-snackbar>
   </v-container>
 </template>
 
@@ -34,19 +39,28 @@ export default {
       form: {
         id: '',
         pwd: ''
-      }
+      },
+      snackbar: false,
+      sbMsg: '',
     }
   },
   methods: {
-    // signIn () {
-    //   axios.post(`${this.$apiRootPath}sign/in`, this.form)
-    //     .then(r => {
-    //       if(!r.data.success) return console.error(r.data.msg);
-    //       localStorage.setItem('token', r.data.token)
-    //       this.$router.push('/');
-    //     })
-    //     .catch(e => console.error(e.message))
-    // }
+    pop (msg) {
+	   this.snackbar = true,
+	   this.sbMsg = msg
+    },
+    signIn () {
+      axios.post(`${this.$apiRootPath}sign/in`, this.form)
+        .then(r => {
+          if(!r.data.success) {
+            this.pop(r.data.msg);
+            return console.error(r.data.msg)
+          }
+          localStorage.setItem('token', r.data.token) // 로컬 스토리지에 토큰 저장
+          this.$router.push('/') // 페이지 이동
+        })
+        .catch(e => console.error(e.message))
+    }
   }
 }
 </script>

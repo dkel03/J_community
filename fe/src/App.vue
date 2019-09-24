@@ -104,6 +104,12 @@ export default {
         }
       }
     ]
-  })
+  }),
+  methods: {
+    signOut () {
+      localStorage.removeItem('token')
+      this.$router.push('/')
+    }
+  }
 }
 </script>

@@ -5,7 +5,7 @@ const suggestionSchema = new mongoose.Schema({
 	context: { type: String, default: '내용이 없습니다'},
 	user: {type: String, default: 'Jay_Kim'},
 	createdAt: {type: String, default: '1999-99-99'},
-	likes: { type: Number, default: 1}
+	likes: { type: Number, default: 0}
 });
 
 const Suggestion = mongoose.model('Suggestion', suggestionSchema);
