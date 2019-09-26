@@ -22,7 +22,7 @@
         </v-card>
       </v-flex>
     </v-layout>
-    
+
     <v-snackbar v-model="snackbar">
       {{ sbMsg }}
       <v-btn color="error" flat @click="snackbar = false"> Close </v-btn>
@@ -32,7 +32,6 @@
 
 <script>
 import axios from 'axios'
-
 export default {
   data () {
     return {
@@ -41,22 +40,23 @@ export default {
         pwd: ''
       },
       snackbar: false,
-      sbMsg: '',
+      sbMsg: ''
     }
   },
   methods: {
     pop (msg) {
-	   this.snackbar = true,
-	   this.sbMsg = msg
+      this.snackbar = true
+      this.sbMsg = msg
     },
     signIn () {
       axios.post(`${this.$apiRootPath}sign/in`, this.form)
         .then(r => {
-          if(!r.data.success) {
-            this.pop(r.data.msg);
+          if (!r.data.success) {
+            this.pop(r.data.msg)
             return console.error(r.data.msg)
           }
           localStorage.setItem('token', r.data.token) // 로컬 스토리지에 토큰 저장
+          this.$store.commit('getToken')
           this.$router.push('/') // 페이지 이동
         })
         .catch(e => console.error(e.message))

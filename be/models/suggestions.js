@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const suggestionSchema = new mongoose.Schema({
 	title: { type: String, default: ''},
 	context: { type: String, default: '내용이 없습니다'},
-	user: {type: String, default: 'Jay_Kim'},
+	user: {type: String, default: ''},
 	createdAt: {type: String, default: '1999-99-99'},
 	likes: { type: Number, default: 0}
 });

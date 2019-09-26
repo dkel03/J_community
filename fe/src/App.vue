@@ -28,24 +28,12 @@
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
       <v-toolbar-title @click="$router.push('/')">중대숲</v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-menu left top>
-        <template v-slot:activator="{ on }">
-          <v-btn icon v-on="on">
-            <v-icon>more_vert</v-icon>
-          </v-btn>
-        </template>
-        <v-list>
-          <v-list-item @click="$router.push('/')">
-            <v-list-tile-title>홈으로</v-list-tile-title>
-          </v-list-item>
-          <v-list-item @click="$router.push('/sign')">
-            <v-list-tile-title>로그인</v-list-tile-title>
-          </v-list-item>
-          <v-list-item @click="signOut">
-            <v-list-tile-title>로그아웃</v-list-tile-title>
-          </v-list-item>
-        </v-list>
-      </v-menu>
+      <v-btn v-if="!$store.state.token" class="ma-2" @click="$router.push('/sign')" outlined tile color="dark">
+        <v-icon left>input</v-icon> login
+      </v-btn>
+      <v-btn v-else class="ma-2" @click="signOut" tile outlined color="dark">
+        <v-icon left>open_in_new</v-icon> logout
+      </v-btn>
     </v-app-bar>
 
     <v-content>
@@ -76,13 +64,6 @@ export default {
         }
       },
       {
-        icon: 'face',
-        title: '사용자관리',
-        to: {
-          path: '/user'
-        }
-      },
-      {
         icon: 'chat',
         title: '건의사항',
         to: {
@@ -93,21 +74,28 @@ export default {
         icon: 'email',
         title: '마음의 편지함',
         to: {
-          path: '/aa'
+          path: '/letter'
         }
       },
       {
-        icon: 'gps_fixed',
-        title: 'GPS기반 복귀체계',
+        icon: 'face',
+        title: '사용자관리',
         to: {
-          path: '/#'
+          path: '/user'
+        }
+      },
+      {
+        icon: 'description',
+        title: '페이지관리',
+        to: {
+          path: '/page'
         }
       }
     ]
   }),
   methods: {
     signOut () {
-      localStorage.removeItem('token')
+      this.$store.commit('delToken')
       this.$router.push('/')
     }
   }
