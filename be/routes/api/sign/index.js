@@ -7,9 +7,9 @@ const jwt = require('jsonwebtoken');
 const cfg = require('../../../../config');
 const User = require('../../../models/users');
 
-const signToken = (id, pwd, lv) => {
+const signToken = (id, pwd, lv, company) => {
   return new Promise((resolve, reject) => {
-    jwt.sign({ id, pwd, lv }, cfg.secretKey, (err, token) => {
+    jwt.sign({ id, pwd, lv, company }, cfg.secretKey, (err, token) => {
       if (err) reject(err);
       resolve(token);
     });
@@ -17,15 +17,17 @@ const signToken = (id, pwd, lv) => {
 };
 
 router.post('/in', function(req, res) {
-  const { id, pwd, lv } = req.body;
+  const { id, pwd } = req.body;
   if (!id) return res.send({ success: false, msg: '아이디가 없습니다.' });
   if (!pwd) return res.send({ success: false, msg: '비밀번호가 없습니다.' });
 
-  User.findOne({ id }) // sign.vue에서 로그인시 id와 pwd의 유효성을 검사하고 토큰을 발행하는 부분 {id}= 폼에서 입력받은 id
+  User.findOneAndUpdate({ id },{ $inc: { inCnt: 1 } })
+  // sign.vue에서 로그인시 id와 pwd의 유효성을 검사하고 토큰을 발행하는 부분 {id}= 폼에서 입력받은 id
+  // 그리고 로그인 횟수를 1 증가시킴
     .then(r => {
       if (!r) throw new Error('존재하지 않는 아이디입니다.');
       if (r.pwd !== pwd) throw new Error('비밀번호가 틀립니다.');
-      return signToken(r.id, r.pwd, r.lv);
+      return signToken(r.id, r.pwd, r.lv, r.company);
     })
     .then(r => {
       res.send({ success: true, token: r });

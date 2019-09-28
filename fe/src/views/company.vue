@@ -1,0 +1,137 @@
+<template>
+  <v-container grid-list-md>
+    <v-layout row wrap>
+      <v-flex xs12 sm6 md4 v-for="c in companys" :key="c._id">
+        <v-card>
+          <v-card-title primary-title>
+            <div>
+              <h3 class="headline mb-0">{{c.name}}</h3>
+            </div>
+          </v-card-title>
+          <v-divider light></v-divider>
+          <v-card-text primary-text>
+            <div>
+              <div>부대 전화번호: {{c.phoneNumber}}</div>
+            </div>
+          </v-card-text>
+          <v-divider light></v-divider>
+          <v-card-actions>
+            <v-btn flat color="orange" @click="putDialog(c)">수정</v-btn>
+            <v-btn flat color="error" @click="delUser(c._id)">삭제</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-flex>
+    </v-layout>
+    <v-dialog v-model="dialog" persistent max-width="500px">
+      <v-card>
+        <v-card-title>
+          <span class="headline">Company Profile</span>
+        </v-card-title>
+        <v-card-text>
+          <v-container grid-list-md>
+            <v-layout wrap>
+              <v-flex xs12 sm6 md4>
+                <v-text-field
+                  label="부대명"
+                  hint="홍길동"
+                  persistent-hint
+                  required
+                  v-model="comName"
+                ></v-text-field>
+              </v-flex>
+              <v-flex xs12 sm6 md4>
+                <v-text-field
+                  label="전화번호"
+                  hint="홍길동"
+                  persistent-hint
+                  required
+                  v-model="comPhone"
+                ></v-text-field>
+              </v-flex>
+            </v-layout>
+          </v-container>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="blue darken-1" flat @click="putCompany">수정</v-btn>
+          <v-btn color="blue darken-1" flat @click.native="dialog = false">Close</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-snackbar
+      v-model="snackbar"
+    >
+      {{ sbMsg }}
+      <v-btn
+        color="pink"
+        flat
+        @click="snackbar = false"
+      >
+        Close
+      </v-btn>
+    </v-snackbar>
+  </v-container>
+</template>
+<script>
+
+export default {
+  data () {
+    return {
+      companys: [],
+      dialog: false,
+      comName: '',
+      comPhone: '',
+      snackbar: false,
+      sbMsg: '',
+      putId: ''
+    }
+  },
+  mounted () {
+    this.getCompany()
+  },
+  methods: {
+    getCompany () {
+      this.$axios.get('manage/company')
+        .then((r) => {
+          this.companys = r.data.company
+        })
+        .catch((e) => {
+          this.pop(e.message)
+        })
+    },
+    putDialog (company) {
+      this.putId = company._id
+      this.dialog = true
+      this.comName = company.name
+      this.comPhone = company.phoneNumber
+    },
+    putCompany () {
+      this.dialog = false
+      this.$axios.put(`manage/company/${this.putId}`, {
+        name: this.comName, phoneNumber: this.comPhone
+      })
+        .then((r) => {
+          this.pop('부대 수정 완료')
+          this.getCompany()
+        })
+        .catch((e) => {
+          this.pop(e.message)
+        })
+    },
+    delCompany (id) {
+      this.$axios.delete(`manage/company/${id}`)
+        .then((r) => {
+          this.pop('부대 삭제 완료')
+          this.getCompany()
+        })
+        .catch((e) => {
+          this.pop(e.message)
+        })
+    },
+    pop (msg) {
+      this.snackbar = true
+      this.sbMsg = msg
+    }
+  }
+}
+</script>

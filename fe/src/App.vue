@@ -90,6 +90,13 @@ export default {
         to: {
           path: '/page'
         }
+      },
+      {
+        icon: 'info',
+        title: '부대관리',
+        to: {
+          path: '/company'
+        }
       }
     ]
   }),

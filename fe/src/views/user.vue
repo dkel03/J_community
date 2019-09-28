@@ -2,7 +2,6 @@
   <v-container grid-list-md>
     <v-layout row wrap>
       <v-flex xs12 sm6 md4 v-for="user in users" :key="user._id">
-
         <v-card>
           <v-card-title primary-title>
             <div>
@@ -43,6 +42,15 @@
                   persistent-hint
                   required
                   v-model="userName"
+                ></v-text-field>
+              </v-flex>
+              <v-flex xs12 sm6 md4>
+                <v-text-field
+                  label="부대"
+                  hint="홍길동"
+                  persistent-hint
+                  required
+                  v-model="userCompany"
                 ></v-text-field>
               </v-flex>
               <v-flex xs12 sm6>
@@ -97,6 +105,7 @@ export default {
       userAge: 0,
       userLv: 0,
       userName: '',
+      userCompany: '',
       snackbar: false,
       sbMsg: '',
       putId: ''
@@ -121,13 +130,14 @@ export default {
       this.putId = user._id
       this.dialog = true
       this.userName = user.name
+      this.userCompany = user.company.name
       this.userLv = user.lv
       this.userAge = user.age
     },
     putUser () {
       this.dialog = false
       this.$axios.put(`${this.$apiRootPath}manage/user/${this.putId}`, {
-        name: this.userName, lv: this.userLv, age: this.userAge
+        name: this.userName, company: { name: this.userCompany }, lv: this.userLv, age: this.userAge
       })
         .then((r) => {
           this.pop('사용자 수정 완료')

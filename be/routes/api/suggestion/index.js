@@ -3,6 +3,12 @@ var createError = require('http-errors');
 var router = express.Router();
 const Suggestion = require('../../../models/suggestions');
 
+// 권한에 따른 접근 허용(2이상은 접근불가)
+router.all('*', (req, res, next) => {
+  if (req.user.lv > 2) return res.send({ success: false, msg: '권한이 없습니다.'})
+  next()
+})
+
 /* Routing Methods */
 router.get('/', function(req, res, next) {
   Suggestion.find()

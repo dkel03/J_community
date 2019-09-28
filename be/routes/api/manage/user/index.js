@@ -9,7 +9,7 @@ router.get('/', function(req, res, next) {
       res.send({ success: true, users: r })
     })
     .catch(e => {
-      res.send({ success: false })
+      res.send({ success: false, msg: e.message })
     })
 });
 
