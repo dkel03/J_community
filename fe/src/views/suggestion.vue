@@ -99,7 +99,7 @@ export default {
       this.sbMsg = msg
     },
     getSuggestions () {
-      axios.get('https://nemv-stack.run.goorm.io/api/suggestion')
+      axios.get('suggestion')
         .then((r) => {
           this.items = r.data.suggestions.sort((a, b) => { return b.createdAt - a.createdAt })
         })
@@ -111,12 +111,11 @@ export default {
       var d = new Date()
       var ISOData = d.toISOString()
       var ISODate = ISOData.split('T', 1)
-      const token = localStorage.getItem('token')
-      console.log(this.sug_title, this.sug_context, this.sug_user)
       this.dialog = false
-      axios.post('https://nemv-stack.run.goorm.io/api/suggestion', { title: this.sug_title, context: this.sug_context, createdAt: ISODate.toString() }, { headers: { authorization: `${token || null}` } })
+      axios.post('suggestion', { title: this.sug_title, context: this.sug_context, createdAt: ISODate.toString() })
         .then((r) => {
-          this.pop('건의사항 등록 완료')
+          this.pop(r)
+          // this.pop('건의사항 등록 완료')
           this.getSuggestions()
         })
         .catch((e) => {

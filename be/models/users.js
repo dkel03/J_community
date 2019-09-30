@@ -11,12 +11,9 @@ const userSchema = new mongoose.Schema({
   id: { type: String, default: '', unique: true, index: true },  
   pwd: { type: String, default: '' },
   name: { type: String, default: ''},
-  age: { type: Number, default: 1 },
+  number: { type: String, default: ''},
+  company: { type: String, default: ''},
   lv: {type: Number, default: 2},
-  company: {
-    name: { type: String, default: ''},
-    phoneNumber: {type: String, default: ''}
-  },
   inCnt: { type: Number, default: 0 }, //add
   retry: { type: Number, default: 0 }
 });
@@ -26,7 +23,7 @@ const User = mongoose.model('User', userSchema)
 // User.collection.dropIndexes('id_1')
 User.findOne({ id: cfg.admin.id }) // admin계정이 없을 경우 생성하는 구문, 있으면 생성 X
   .then((r) => {
-    if (!r) return User.create({ id: cfg.admin.id, pwd: cfg.admin.pwd, name: cfg.admin.name, company: cfg.admin.company })
+    if (!r) return User.create({ id: cfg.admin.id, pwd: cfg.admin.pwd, name: cfg.admin.name, number: cfg.admin.number, company: cfg.admin.company, lv: 0 })
     return Promise.resolve(null)
   })
   .then((r) => {

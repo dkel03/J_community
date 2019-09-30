@@ -4,7 +4,7 @@
       <v-flex xs12 sm8 md4>
         <v-card class="elevation-12">
           <v-toolbar dark color="green darken-3">
-            <v-toolbar-title>Login form</v-toolbar-title>
+            <v-toolbar-title>로그인</v-toolbar-title>
             <v-spacer></v-spacer>
           </v-toolbar>
           <v-card-text>
@@ -16,6 +16,7 @@
           </v-card-text>
 
           <v-card-actions>
+            <v-btn dark color="secondary" @click="$router.push('/register')">signUp</v-btn>
             <v-spacer></v-spacer>
             <v-btn dark color="green darken-3" @click="signIn">로그인</v-btn>
           </v-card-actions>
@@ -49,7 +50,7 @@ export default {
       this.sbMsg = msg
     },
     signIn () {
-      axios.post(`${this.$apiRootPath}sign/in`, this.form)
+      axios.post('sign/in', this.form)
         .then(r => {
           if (!r.data.success) {
             this.pop(r.data.msg)

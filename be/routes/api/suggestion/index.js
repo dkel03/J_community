@@ -23,10 +23,9 @@ router.get('/', function(req, res, next) {
 router.post('/', function(req, res, next) {
   const { title, context, createdAt } = req.body;
   const user = req.user.id;
-  console.log(user)
-  const s = new Suggestion({ title, context, user, createdAt });
-  s
-    .save()
+  // const s = new Suggestion({ title, context, user, createdAt });
+  // s
+  Suggestion.create({ title, context, user, createdAt })
     .then(r => {
       res.send({ success: true, msg: r });
     })

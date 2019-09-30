@@ -1,15 +1,43 @@
 <template>
-  <v-app id="inspire">
+  <v-app :dark="siteDark" id="inspire">
     <v-navigation-drawer
       v-model="drawer"
+      clipped
+      :mini-variant.sync="mini"
       app
     >
-      <v-list dense>
-        <v-list-item
-          v-for="(item, i) in items"
-          :key="i"
-          :to="item.to"
+      <v-list-item>
+        <v-list-item-avatar>
+          <v-img src="./assets/army2.png"></v-img>
+        </v-list-item-avatar>
+
+        <v-list-item-title>모범병사</v-list-item-title>
+
+        <v-btn
+          icon
+          @click.stop="mini = !mini"
         >
+          <v-icon>keyboard_arrow_left</v-icon>
+        </v-btn>
+      </v-list-item>
+
+      <v-divider></v-divider>
+
+      <v-list dense>
+        <v-subheader>Basic</v-subheader>
+        <v-list-item v-for="(item, i) in items_basic" :key="i" :to="item.to">
+          <v-list-item-action>
+            <v-icon v-html="item.icon"></v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title v-text="item.title"></v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+      <v-divider :inset="inset"></v-divider>
+      <v-list dense>
+        <v-subheader>Manage</v-subheader>
+        <v-list-item v-for="(item, i) in items_manage" :key="i" :to="item.to">
           <v-list-item-action>
             <v-icon v-html="item.icon"></v-icon>
           </v-list-item-action>
@@ -24,9 +52,13 @@
       app
       color="green"
       dark
+      clipped-left
     >
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-      <v-toolbar-title @click="$router.push('/')">중대숲</v-toolbar-title>
+      <v-app-bar-nav-icon @click.stop="max"></v-app-bar-nav-icon>
+      <v-toolbar-title @click="$router.push('/')">
+        <v-icon left>{{siteIcon}}</v-icon>
+        {{siteTitle}}
+      </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn v-if="!$store.state.token" class="ma-2" @click="$router.push('/sign')" outlined tile color="dark">
         <v-icon left>input</v-icon> login
@@ -43,7 +75,7 @@
       color="green"
       app
     >
-      <span class="white--text">&copy; 2019</span>
+      <span class="white--text">{{siteCopyright}}</span>
     </v-footer>
   </v-app>
 </template>
@@ -55,7 +87,12 @@ export default {
   },
   data: () => ({
     drawer: null,
-    items: [
+    mini: true,
+    siteIcon: '',
+    siteTitle: '기다리는중',
+    siteCopyright: '기다리는중',
+    siteDark: false,
+    items_basic: [
       {
         icon: 'home',
         title: '홈',
@@ -76,7 +113,9 @@ export default {
         to: {
           path: '/letter'
         }
-      },
+      }
+    ],
+    items_manage: [
       {
         icon: 'face',
         title: '사용자관리',
@@ -85,25 +124,50 @@ export default {
         }
       },
       {
-        icon: 'description',
+        icon: 'info',
+        title: '부대관리',
+        to: {
+          path: '/company'
+        }
+      },
+      {
+        icon: 'bookmarks',
         title: '페이지관리',
         to: {
           path: '/page'
         }
       },
       {
-        icon: 'info',
-        title: '부대관리',
+        icon: 'description',
+        title: '사이트관리',
         to: {
-          path: '/company'
+          path: '/site'
         }
       }
     ]
   }),
+  mounted () {
+    this.getSite()
+  },
   methods: {
     signOut () {
       this.$store.commit('delToken')
-      this.$router.push('/')
+      this.$router.replace('/')
+    },
+    getSite () {
+      this.$axios.get('/site')
+        .then(r => {
+          console.log(r.data.d)
+          this.siteIcon = r.data.d.icon
+          this.siteTitle = r.data.d.title
+          this.siteCopyright = r.data.d.copyright
+          this.siteDark = r.data.d.dark
+        })
+        .catch(e => console.error(e.message))
+    },
+    max () {
+      this.mini = false
+      this.drawer = !(this.drawer)
     }
   }
 }

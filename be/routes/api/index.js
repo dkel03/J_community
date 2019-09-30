@@ -20,6 +20,8 @@ const verifyToken = t => {
 };
 /* 토큰 검사 필요없는 페이지 */
 router.use('/sign', require('./sign'));
+router.use('/register', require('./register'));
+router.use('/site', require('./site'));
 
 /* 토큰 검사 */
 router.all('*', (req, res, next) => {

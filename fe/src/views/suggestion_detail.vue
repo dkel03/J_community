@@ -13,7 +13,6 @@
             <v-list-item
               v-for="(item, i) in items"
               :key="i"
-              @click=""
             >
               <v-list-item-title>{{ item.title }}</v-list-item-title>
             </v-list-item>
@@ -47,11 +46,11 @@
         </v-list-item>
       </v-card-actions>
     </v-card>
-    
+
     <v-btn small class="float-right ma-2" tile outlined color="success" @click="dialog = true">
       <v-icon left>create</v-icon> Edit
     </v-btn>
-	  <v-btn small class="float-right ma-2" tile outlined color="error" @click="delSuggestion(suggestionId)">
+    <v-btn small class="float-right ma-2" tile outlined color="error" @click="delSuggestion(suggestionId)">
       <v-icon left>clear</v-icon> Delete
     </v-btn>
 
@@ -79,8 +78,7 @@
           <v-btn color="blue darken-1" text @click="putSuggestion()">Save</v-btn>
         </v-card-actions>
       </v-card>
-    </v-dialog>   
-    
+    </v-dialog>
   </v-container>
 </template>
 
@@ -88,58 +86,58 @@
 import axios from 'axios'
 
 export default {
-  data() {
+  data () {
     const suggestionId = this.$route.params.suggestionId
     return {
-      suggestionId : suggestionId,
+      suggestionId: suggestionId,
       suggestionTitle: '',
       suggestionContext: '',
       item: {},
       like_icon: 'favorite',
-      more: "more-vert",
+      more: 'more-vert',
       dialog: false
     }
   },
-  created() {
-    this.getSuggestion(this.suggestionId);
+  created () {
+    this.getSuggestion(this.suggestionId)
   },
   methods: {
-    getSuggestion(sugId) {
+    getSuggestion (sugId) {
       axios.get('https://nemv-stack.run.goorm.io/api/suggestion')
-      .then((r) => {
-        this.item = r.data.suggestions.filter(el => el._id === sugId)[0]
-        this.suggestionTitle= this.item.title
-        this.suggestionContext = this.item.context
-        console.log(JSON.stringify(this.item))
-      })
-      .catch((e) => {
-        console.error(e.message)
-      })
+        .then((r) => {
+          this.item = r.data.suggestions.filter(el => el._id === sugId)[0]
+          this.suggestionTitle = this.item.title
+          this.suggestionContext = this.item.context
+          console.log(JSON.stringify(this.item))
+        })
+        .catch((e) => {
+          console.error(e.message)
+        })
     },
 
-    putSuggestion() {
+    putSuggestion () {
       this.dialog = false
-      axios.put(`https://nemv-stack.run.goorm.io/api/suggestion/${this.suggestionId}`, {
+      axios.put(`suggestion/${this.suggestionId}`, {
         title: this.suggestionTitle, context: this.suggestionContext
       })
-      .then((r) => {
-        this.getSuggestion(this.suggestionId)
-      })
-      .catch((e) => {
-        console.error(e.message)
-      }) //api에 put 요청
+        .then((r) => {
+          this.getSuggestion(this.suggestionId)
+        })
+        .catch((e) => {
+          console.error(e.message)
+        }) // api에 put 요청
     },
 
-    delSuggestion(id) {
-      axios.delete(`https://nemv-stack.run.goorm.io/api/suggestion/${id}`)
-      .then((r) => {
+    delSuggestion (id) {
+      axios.delete(`suggestion/${id}`)
+        .then((r) => {
           this.$router.push({
             path: '/suggestion'
-          });
-      })
-      .catch((e) => {
-        console.error(e.message)
-      })	
+          })
+        })
+        .catch((e) => {
+          console.error(e.message)
+        })
     }
   }
 }

@@ -12,11 +12,10 @@
           <v-card-text primary-text>
             <div>
               <div>이름: {{user.name}}</div>
+              <div>군번: {{user.number}}</div>
+              <div>부대: {{user.company}}</div>
               <div>권한: {{user.lv}}</div>
-              <div>나이: {{user.age}}</div>
               <div>로그인 횟수: {{user.inCnt}}</div>
-              <div>부대: {{user.company.name}}</div>
-              <div>부대 전화번호: {{user.company.phoneNumber}}</div>
             </div>
           </v-card-text>
           <v-divider light></v-divider>
@@ -46,12 +45,20 @@
               </v-flex>
               <v-flex xs12 sm6 md4>
                 <v-text-field
-                  label="부대"
+                  label="군번"
                   hint="홍길동"
                   persistent-hint
                   required
-                  v-model="userCompany"
+                  v-model="userNumber"
                 ></v-text-field>
+              </v-flex>
+              <v-flex xs12 sm6 md4>
+                <v-select
+                  :items="companys"
+                  label="부대"
+                  required
+                  v-model="userCompany"
+                ></v-select>
               </v-flex>
               <v-flex xs12 sm6>
                 <v-select
@@ -59,14 +66,6 @@
                   label="권한"
                   required
                   v-model="userLv"
-                ></v-select>
-              </v-flex>
-              <v-flex xs12 sm6>
-                <v-select
-                  :items="userAges"
-                  label="나이"
-                  required
-                  v-model="userAge"
                 ></v-select>
               </v-flex>
             </v-layout>
@@ -98,13 +97,13 @@
 export default {
   data () {
     return {
+      companys: [],
       users: [],
       dialog: false,
-      userAges: [],
       userLvs: [],
-      userAge: 0,
       userLv: 0,
       userName: '',
+      userNumber: '',
       userCompany: '',
       snackbar: false,
       sbMsg: '',
@@ -112,13 +111,13 @@ export default {
     }
   },
   mounted () {
-    for (let i = 10; i < 40; i++) this.userAges.push(i)
     for (let i = 0; i < 4; i++) this.userLvs.push(i)
     this.getUsers()
+    this.getCompanys()
   },
   methods: {
     getUsers () {
-      this.$axios.get(`${this.$apiRootPath}manage/user`)
+      this.$axios.get(`manage/user`)
         .then((r) => {
           this.users = r.data.users
         })
@@ -130,14 +129,14 @@ export default {
       this.putId = user._id
       this.dialog = true
       this.userName = user.name
-      this.userCompany = user.company.name
+      this.userNumber = user.number
+      this.userCompany = user.company
       this.userLv = user.lv
-      this.userAge = user.age
     },
     putUser () {
       this.dialog = false
-      this.$axios.put(`${this.$apiRootPath}manage/user/${this.putId}`, {
-        name: this.userName, company: { name: this.userCompany }, lv: this.userLv, age: this.userAge
+      this.$axios.put(`manage/user/${this.putId}`, {
+        name: this.userName, number: this.userNumber, company: this.userCompany, lv: this.userLv
       })
         .then((r) => {
           this.pop('사용자 수정 완료')
@@ -148,7 +147,7 @@ export default {
         })
     },
     delUser (id) {
-      this.$axios.delete(`${this.$apiRootPath}manage/user/${id}`)
+      this.$axios.delete(`manage/user/${id}`)
         .then((r) => {
           this.pop('사용자 삭제 완료')
           this.getUsers()
@@ -156,6 +155,15 @@ export default {
         .catch((e) => {
           this.pop(e.message)
         })
+    },
+    getCompanys () {
+      this.$axios.get('company/register')
+        .then((r) => {
+          this.companys = r.data.company.map(function (el) {
+            return el.name
+          })
+        })
+        .catch(e => this.pop(e.message, 'warning'))
     },
     pop (msg) {
       this.snackbar = true

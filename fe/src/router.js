@@ -9,6 +9,7 @@ import Letter from './views/letter.vue'
 import User from './views/user.vue'
 import Page from './views/page.vue'
 import Company from './views/company.vue'
+import Site from './views/site'
 
 Vue.use(Router)
 
@@ -93,9 +94,20 @@ export default new Router({
       beforeEnter: pageCheck
     },
     {
+      path: '/site',
+      name: '사이트',
+      component: Site,
+      beforeEnter: pageCheck
+    },
+    {
       path: '/sign',
       name: '로그인',
       component: () => import('./views/sign')
+    },
+    {
+      path: '/register',
+      name: '회원가입',
+      component: () => import('./views/register')
     },
     {
       path: '/block/:msg',

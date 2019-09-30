@@ -20,7 +20,7 @@
         </v-card>
       </v-flex>
     </v-layout>
-    건의사항
+    <!-- 건의사항
     <v-layout row wrap>
       <v-flex xs12 sm6 md4 v-for="sug in suggestions" :key = "sug._id">
         <v-card min-width="344">
@@ -31,7 +31,7 @@
           </v-card-actions>
         </v-card>
       </v-flex>
-    </v-layout>
+    </v-layout> -->
   </v-container>
 </template>
 <script>
@@ -50,7 +50,7 @@ export default {
   },
   methods: {
     getCompany () {
-      axios.get('https://nemv-stack.run.goorm.io/api/company')
+      axios.get('company/home')
         .then((r) => {
           console.log(r)
           this.company = r.data.company
@@ -61,7 +61,7 @@ export default {
         })
     },
     getSuggestions () {
-      axios.get('https://nemv-stack.run.goorm.io/api/suggestion')
+      axios.get('suggestion')
         .then((r) => {
           this.suggestions = r.data.suggestions
         })

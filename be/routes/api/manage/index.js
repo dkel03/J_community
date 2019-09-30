@@ -9,6 +9,7 @@ router.all('*', (req, res, next) => {
 
 router.use('/company', require('./company'))
 router.use('/page', require('./page'))
+router.use('/site', require('./site'))
 router.use('/user', require('./user'))
 
 router.all('*', function(req, res, next) {
