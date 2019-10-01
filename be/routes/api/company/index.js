@@ -8,7 +8,6 @@ router.get('/home', function(req, res, next) {
   // 홈페이지에서 부대정보 받아오기 위한 get
   Company.findOne({ name: req.user.company })
     .then(r => {
-      console.log(r);
       res.send({ success: true, company: r, user: req.user });
     })
     .catch(e => {
@@ -19,18 +18,7 @@ router.get('/register', function(req, res, next) {
   // 회원가입시에 존재하는 부대정보 받아오기 위한 get
   Company.find()
     .then(r => {
-      console.log(r);
       res.send({ success: true, company: r });
-    })
-    .catch(e => {
-      res.send({ success: false });
-    });
-});
-router.post('/', function(req, res, next) {
-  const u = req.body;
-  Company.create(u)
-    .then(r => {
-      res.send({ success: true, msg: r });
     })
     .catch(e => {
       res.send({ success: false });

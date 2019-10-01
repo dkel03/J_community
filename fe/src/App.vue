@@ -4,15 +4,14 @@
       v-model="drawer"
       clipped
       :mini-variant.sync="mini"
+      :dark="siteDark"
       app
     >
       <v-list-item>
         <v-list-item-avatar>
           <v-img src="./assets/army2.png"></v-img>
         </v-list-item-avatar>
-
         <v-list-item-title>모범병사</v-list-item-title>
-
         <v-btn
           icon
           @click.stop="mini = !mini"
@@ -20,7 +19,6 @@
           <v-icon>keyboard_arrow_left</v-icon>
         </v-btn>
       </v-list-item>
-
       <v-divider></v-divider>
 
       <v-list dense>
@@ -50,8 +48,7 @@
 
     <v-app-bar
       app
-      color="green"
-      dark
+      :dark="siteDark"
       clipped-left
     >
       <v-app-bar-nav-icon @click.stop="max"></v-app-bar-nav-icon>
@@ -72,10 +69,10 @@
       <router-view/>
     </v-content>
     <v-footer
-      color="green"
+      :dark = "siteDark"
       app
     >
-      <span class="white--text">{{siteCopyright}}</span>
+      <span>{{siteCopyright}}</span>
     </v-footer>
   </v-app>
 </template>
@@ -87,7 +84,7 @@ export default {
   },
   data: () => ({
     drawer: null,
-    mini: true,
+    mini: false,
     siteIcon: '',
     siteTitle: '기다리는중',
     siteCopyright: '기다리는중',

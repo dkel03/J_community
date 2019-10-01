@@ -17,11 +17,16 @@
           <v-divider light></v-divider>
           <v-card-actions>
             <v-btn flat color="orange" @click="putDialog(c)">수정</v-btn>
-            <v-btn flat color="error" @click="delUser(c._id)">삭제</v-btn>
+            <v-btn flat color="error" @click="delCompany(c._id)">삭제</v-btn>
           </v-card-actions>
         </v-card>
       </v-flex>
     </v-layout>
+
+    <v-btn absolute dark fab bottom right color="green darken-4" @click="mdUp">
+     <v-icon>add</v-icon>
+    </v-btn>
+
     <v-dialog v-model="dialog" persistent max-width="500px">
       <v-card>
         <v-card-title>
@@ -53,7 +58,7 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" flat @click="putCompany">수정</v-btn>
+          <v-btn color="blue darken-1" flat @click="updateMode ? putCompany() : postCompany()">{{updateMode ? "수정" : "생성"}}</v-btn>
           <v-btn color="blue darken-1" flat @click.native="dialog = false">Close</v-btn>
         </v-card-actions>
       </v-card>
@@ -82,6 +87,7 @@ export default {
       comName: '',
       comPhone: '',
       snackbar: false,
+      updateMode: false,
       sbMsg: '',
       putId: ''
     }
@@ -104,6 +110,20 @@ export default {
       this.dialog = true
       this.comName = company.name
       this.comPhone = company.phoneNumber
+      this.updateMode = true
+    },
+    postCompany () {
+      this.dialog = false
+      this.$axios.post('manage/company', {
+        name: this.comName, phoneNumber: this.comPhone
+      })
+        .then((r) => {
+          this.pop('부대 등록 완료')
+          this.getCompany()
+        })
+        .catch((e) => {
+          this.pop(e.message)
+        })
     },
     putCompany () {
       this.dialog = false
@@ -127,6 +147,12 @@ export default {
         .catch((e) => {
           this.pop(e.message)
         })
+    },
+    mdUp () {
+      this.dialog = true
+      this.updateMode = false
+      this.comName = ''
+      this.comPhone = ''
     },
     pop (msg) {
       this.snackbar = true

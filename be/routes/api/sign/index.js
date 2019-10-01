@@ -1,5 +1,6 @@
 const express = require('express');
 const createError = require('http-errors');
+const crypto = require('crypto');
 const router = express.Router();
 
 //added modules
@@ -7,9 +8,9 @@ const jwt = require('jsonwebtoken');
 const cfg = require('../../../../config');
 const User = require('../../../models/users');
 
-const signToken = (id, pwd, lv, company) => {
+const signToken = (id, name, number, lv, company) => {
   return new Promise((resolve, reject) => {
-    jwt.sign({ id, pwd, lv, company }, cfg.secretKey, (err, token) => {
+    jwt.sign({ id, name, number, lv, company }, cfg.secretKey, (err, token) => {
       if (err) reject(err);
       resolve(token);
     });
@@ -21,13 +22,14 @@ router.post('/in', function(req, res) {
   if (!id) return res.send({ success: false, msg: '아이디가 없습니다.' });
   if (!pwd) return res.send({ success: false, msg: '비밀번호가 없습니다.' });
 
-  User.findOneAndUpdate({ id },{ $inc: { inCnt: 1 } })
-  // sign.vue에서 로그인시 id와 pwd의 유효성을 검사하고 토큰을 발행하는 부분 {id}= 폼에서 입력받은 id
-  // 그리고 로그인 횟수를 1 증가시킴
+  User.findOneAndUpdate({ id }, { $inc: { inCnt: 1 } })
+    // sign.vue에서 로그인시 id와 pwd의 유효성을 검사하고 토큰을 발행하는 부분 {id}= 폼에서 입력받은 id
+    // 그리고 로그인 횟수를 1 증가시킴
     .then(r => {
       if (!r) throw new Error('존재하지 않는 아이디입니다.');
-      if (r.pwd !== pwd) throw new Error('비밀번호가 틀립니다.');
-      return signToken(r.id, r.pwd, r.lv, r.company);
+      const p = crypto.scryptSync(pwd, r._id.toString(), 64, { N: 1024 }).toString('hex');
+      if (r.pwd !== p) throw new Error('비밀번호가 틀립니다.');  // 폼에서 받은 비밀번호를 다시 암호화해서 DB의 암호화된 비밀번호와 비교
+      return signToken(r.id, r.name, r.number, r.lv, r.company);
     })
     .then(r => {
       res.send({ success: true, token: r });

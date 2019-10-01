@@ -5,17 +5,21 @@ const Company = require('../../../../models/companys');
 
 /* Routing Methods */
 router.get('/', function(req, res, next) {
-  // Company.create({ name: '교육사령부', phoneNumber: '042-111-2222' })
-  // .then(r => {
-  //   res.send({success:true, company: r})
-  // })
-  // .catch((e) => {
-  //   res.send({success:false, msg: e.message})
-  // })
   Company.find()
     .then(r => {
       console.log(r)
       res.send({ success: true, company: r });
+    })
+    .catch(e => {
+      res.send({ success: false });
+    });
+});
+
+router.post('/', function(req, res, next) {
+  const u = req.body;
+  Company.create(u)
+    .then(r => {
+      res.send({ success: true, msg: r });
     })
     .catch(e => {
       res.send({ success: false });

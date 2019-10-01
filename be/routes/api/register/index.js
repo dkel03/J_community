@@ -1,5 +1,6 @@
 const express = require('express');
 const createError = require('http-errors');
+const crypto = require('crypto');
 const router = express.Router();
 
 //added modules
@@ -15,6 +16,10 @@ router.post('/', function(req, res) {
     .then(r => {
       if (r) throw new Error('이미 존재하는 아이디입니다.');
       return User.create(u)
+    })
+    .then((r) => {
+      const pwd = crypto.scryptSync(r.pwd, r._id.toString(), 64, { N: 1024 }).toString('hex');
+      return User.updateOne({ _id: r._id }, { $set: { pwd } });
     })
     .then(r => {
       res.send({ success: true});
