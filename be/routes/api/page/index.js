@@ -16,7 +16,7 @@ router.post('/', function(req, res, next) {
       return Page.updateOne({ _id: r._id }, { $inc: { inCnt: 1 } }) // 만약 페이지도 있고 유저레벨과 맞다면 해당 페이지 모델을 찾아서 inCnt를 1증가 시킴
     })
     .then(() => {
-      res.send({ success: true, d: req.user })
+      res.send({ success: true, d: req.user, token: req.token  })
     })
     .catch((e) => {
       res.send({ success: false, msg: e.message })

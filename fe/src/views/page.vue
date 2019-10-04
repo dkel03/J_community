@@ -94,7 +94,7 @@ export default {
     }
   },
   mounted () {
-    for (let i = 0; i < 5; i++) this.pageLvs.push(i)
+    for (let i = 0; i < 4; i++) this.pageLvs.push(i)
     this.getPages()
   },
   methods: {

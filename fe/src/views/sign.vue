@@ -11,8 +11,12 @@
             <v-form>
               <v-text-field prepend-icon="person" v-model="form.id" label="아이디" type="text"></v-text-field>
               <v-text-field prepend-icon="lock" v-model="form.pwd" label="비밀번호" type="password"></v-text-field>
+              <v-checkbox
+                v-model="form.remember"
+                label="암호 기억하기(최대 7일간 보관 됩니다.)"
+              ></v-checkbox>
             </v-form>
-            <small class="ma-2">로그인을 반드시 해주세요</small>
+            <!-- <small class="ma-2">로그인을 반드시 해주세요</small> -->
           </v-card-text>
 
           <v-card-actions>
@@ -38,7 +42,8 @@ export default {
     return {
       form: {
         id: '',
-        pwd: ''
+        pwd: '',
+        remember: false
       },
       snackbar: false,
       sbMsg: ''

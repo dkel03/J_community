@@ -10,6 +10,7 @@ import User from './views/user.vue'
 import Page from './views/page.vue'
 import Company from './views/company.vue'
 import Site from './views/site'
+import Map from './views/map'
 
 Vue.use(Router)
 
@@ -30,6 +31,9 @@ axios.interceptors.request.use(function (config) {
 // Add a response interceptor
 axios.interceptors.response.use(function (response) {
   // Do something with response data
+  const token = response.data.token
+  // console.log(token)
+  if (token) localStorage.setItem('token', token)
   return response
 }, function (error) {
   // Do something with response error
@@ -73,6 +77,12 @@ export default new Router({
       path: '/letter',
       name: '마음의 편지함',
       component: Letter,
+      beforeEnter: pageCheck
+    },
+    {
+      path: '/map',
+      name: '지도',
+      component: Map,
       beforeEnter: pageCheck
     },
     {

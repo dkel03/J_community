@@ -13,7 +13,7 @@ router.all('*', (req, res, next) => {
 router.get('/', function(req, res, next) {
   Suggestion.find()
     .then(r => {
-      res.send({ success: true, suggestions: r });
+      res.send({ success: true, suggestions: r, token: req.token });
     })
     .catch(e => {
       res.send({ success: false });
@@ -27,7 +27,7 @@ router.post('/', function(req, res, next) {
   // s
   Suggestion.create({ title, context, user, createdAt })
     .then(r => {
-      res.send({ success: true, msg: r });
+      res.send({ success: true, msg: r, token: req.token });
     })
     .catch(e => {
       res.send({ success: 'failed', msg: e.message });
@@ -39,7 +39,7 @@ router.put('/:id', (req, res, next) => {
   const { title, context } = req.body;
   Suggestion.updateOne({ _id: id }, { $set: { title, context } })
     .then(r => {
-      res.send({ success: true, msg: r });
+      res.send({ success: true, msg: r, token: req.token });
     })
     .catch(e => {
       res.send({ success: 'failed', msg: e.message });
@@ -50,7 +50,7 @@ router.delete('/:id', function(req, res, next) {
   const id = req.params.id;
   Suggestion.deleteOne({ _id: id })
     .then(r => {
-      res.send({ success: true, msg: r });
+      res.send({ success: true, msg: r, token: req.token });
     })
     .catch(e => {
       res.send({ success: 'failed', msg: e.message });

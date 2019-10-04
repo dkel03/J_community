@@ -1,16 +1,23 @@
 const express = require('express');
 const createError = require('http-errors');
-const crypto = require('crypto');
 const router = express.Router();
 
 //added modules
+const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const cfg = require('../../../../config');
 const User = require('../../../models/users');
 
-const signToken = (id, name, number, lv, company) => {
+const signToken = (id, name, number, lv, company, rmb) => {
   return new Promise((resolve, reject) => {
-    jwt.sign({ id, name, number, lv, company }, cfg.secretKey, (err, token) => {
+    const o = {
+      issuer: cfg.jwt.issuer,
+      subject: cfg.jwt.subject,
+      expiresIn: cfg.jwt.expiresIn, // 3분
+      algorithm: cfg.jwt.algorithm
+    };
+    if (rmb) o.expiresIn = cfg.jwt.expiresInRemember; // 6일
+    jwt.sign({ id, name, number, lv, company, rmb }, cfg.jwt.secretKey, o, (err, token) => {
       if (err) reject(err);
       resolve(token);
     });
@@ -18,18 +25,18 @@ const signToken = (id, name, number, lv, company) => {
 };
 
 router.post('/in', function(req, res) {
-  const { id, pwd } = req.body;
+  const { id, pwd, remember } = req.body;
   if (!id) return res.send({ success: false, msg: '아이디가 없습니다.' });
   if (!pwd) return res.send({ success: false, msg: '비밀번호가 없습니다.' });
-
+  if (remember === undefined) return res.send({ success: false, msg: '기억하기가 없습니다.' });
   User.findOneAndUpdate({ id }, { $inc: { inCnt: 1 } })
     // sign.vue에서 로그인시 id와 pwd의 유효성을 검사하고 토큰을 발행하는 부분 {id}= 폼에서 입력받은 id
     // 그리고 로그인 횟수를 1 증가시킴
     .then(r => {
       if (!r) throw new Error('존재하지 않는 아이디입니다.');
       const p = crypto.scryptSync(pwd, r._id.toString(), 64, { N: 1024 }).toString('hex');
-      if (r.pwd !== p) throw new Error('비밀번호가 틀립니다.');  // 폼에서 받은 비밀번호를 다시 암호화해서 DB의 암호화된 비밀번호와 비교
-      return signToken(r.id, r.name, r.number, r.lv, r.company);
+      if (r.pwd !== p) throw new Error('비밀번호가 틀립니다.'); // 폼에서 받은 비밀번호를 다시 암호화해서 DB의 암호화된 비밀번호와 비교
+      return signToken(r.id, r.name, r.number, r.lv, r.company, remember);
     })
     .then(r => {
       res.send({ success: true, token: r });

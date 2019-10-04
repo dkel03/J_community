@@ -32,7 +32,7 @@
           </v-list-item-content>
         </v-list-item>
       </v-list>
-      <v-divider :inset="inset"></v-divider>
+      <v-divider></v-divider>
       <v-list dense>
         <v-subheader>Manage</v-subheader>
         <v-list-item v-for="(item, i) in items_manage" :key="i" :to="item.to">
@@ -110,6 +110,13 @@ export default {
         to: {
           path: '/letter'
         }
+      },
+      {
+        icon: 'my_location',
+        title: 'GPS기반 3복귀 체계',
+        to: {
+          path: '/map'
+        }
       }
     ],
     items_manage: [
@@ -149,7 +156,8 @@ export default {
   methods: {
     signOut () {
       this.$store.commit('delToken')
-      this.$router.replace('/')
+      this.$router.push('/out')
+      this.$router.push('/')
     },
     getSite () {
       this.$axios.get('/site')
