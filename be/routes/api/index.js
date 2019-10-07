@@ -20,16 +20,17 @@ const verifyToken = t => {
   });
 };
 
-const signToken = (id, name, number, lv, company, rmb) => {
+const signToken = (id, name, number, lv, company, exp) => {
   return new Promise((resolve, reject) => {
     const o = {
       issuer: cfg.jwt.issuer,
       subject: cfg.jwt.subject,
       expiresIn: cfg.jwt.expiresIn, // 3분
-      algorithm: cfg.jwt.algorithm
+      algorithm: cfg.jwt.algorithm,
+      expriesIn: exp
     };
     if (rmb) o.expiresIn = cfg.jwt.expiresInRemember; // 6일
-    jwt.sign({ id, name, number, lv, company, rmb }, cfg.jwt.secretKey, o, (err, token) => {
+    jwt.sign({ id, name, number, lv, company }, cfg.jwt.secretKey, o, (err, token) => {
       if (err) reject(err);
       resolve(token);
     });
@@ -41,8 +42,9 @@ const getToken = async(t) => {
   if (vt.lv > 2) return { user: vt, token: null } // 만약 lv이 2이상이면 토큰 null로 만듬
   const diff = moment(vt.exp * 1000).diff(moment(), 'seconds') // 남은 로그인 시간
   console.log(diff)
-  if (diff > (vt.exp - vt.iat) / cfg.jwt.expiresInDiv) return { user: vt, token: null }
-  const nt = await signToken(vt.id, vt.name, vt.number, vt.lv, vt.company, vt.rmb)
+  const expSec = (vt.exp - vt.iat)
+  if (diff > expSec / cfg.jwt.expiresInDiv) return { user: vt, token: null }
+  const nt = await signToken(vt.id, vt.name, vt.number, vt.lv, vt.company, expSec)
   vt = await verifyToken(nt)
   return { user: vt, token: nt }
 }
@@ -61,7 +63,7 @@ router.all('*', (req, res, next) => {
       req.token = v.token
       next()
     })
-    .catch(e => res.send({ success: false, msg: e.message }))
+    .catch(e => next(createError(401, e.message)))
 });
 
 /* 토큰 검사 필요한 페이지 */
@@ -72,9 +74,7 @@ router.use('/suggestion', require('./suggestion'));
 router.use('/user', require('./user'));
 
 /* 없는 페이지 처리 */
-router.all('*', function(req, res, next) {
-  next(createError(404, 'api: 그런 api 없어용'));
-});
+router.all('*', require('./notFound'));
 
 module.exports = router;
 

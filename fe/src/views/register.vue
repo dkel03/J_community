@@ -81,18 +81,6 @@
         </v-card>
       </v-flex>
     </v-layout>
-    <v-snackbar
-      v-model="sb.act"
-    >
-      {{ sb.msg }}
-      <v-btn
-        :color="sb.color"
-        flat
-        @click="sb.act = false"
-      >
-        닫기
-      </v-btn>
-    </v-snackbar>
   </v-container>
 </template>
 
@@ -113,11 +101,6 @@ export default {
       number: ''
     },
     companys: [],
-    sb: {
-      act: false,
-      msg: '',
-      color: 'warning'
-    },
     agree: null,
     dictionary: {
       messages: ko.messages,
@@ -157,10 +140,10 @@ export default {
         })
         .then(r => {
           if (!r.data.success) throw new Error('서버가 거부했습니다.')
-          this.pop('가입 완료 되었습니다.', 'success')
+          this.$store.commit('pop', { msg: '가입 완료', color: 'success' })
           this.$router.push('/sign')
         })
-        .catch(e => this.pop(e.message, 'warning'))
+        .catch(e => this.$store.commit('pop', { msg: e.message, color: 'warning' }))
     },
     getCompanys () {
       this.$axios.get('company/register')
@@ -169,12 +152,7 @@ export default {
             return el.name
           })
         })
-        .catch(e => this.pop(e.message, 'warning'))
-    },
-    pop (m, cl) {
-      this.sb.act = true
-      this.sb.msg = m
-      this.sb.color = cl
+        .catch(e => this.$store.commit('pop', { msg: e.message, color: 'error' }))
     },
     clear () {
       this.form.id = ''

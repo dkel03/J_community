@@ -48,6 +48,13 @@ export default {
     this.getCompany()
     this.getSuggestions()
   },
+  watch: {
+    '$store.state.token': {
+      handler () {
+        this.getCompany() // 전역 토큰변수를 감시하여 로그아웃 시에 다시 getCompany요청 보내기
+      }
+    }
+  },
   methods: {
     getCompany () {
       axios.get('company/home')
@@ -57,7 +64,7 @@ export default {
           this.user = r.data.user
         })
         .catch((e) => {
-          console.log(e.message)
+          this.$store.commit('pop', { msg: e.message, color: 'error' })
         })
     },
     getSuggestions () {
@@ -66,7 +73,7 @@ export default {
           this.suggestions = r.data.suggestions
         })
         .catch((e) => {
-          console.error(e.message)
+          this.$store.commit('pop', { msg: e.message, color: 'error' })
         })
     }
   }

@@ -78,18 +78,6 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-snackbar
-      v-model="snackbar"
-    >
-      {{ sbMsg }}
-      <v-btn
-        color="pink"
-        flat
-        @click="snackbar = false"
-      >
-        Close
-      </v-btn>
-    </v-snackbar>
   </v-container>
 </template>
 <script>
@@ -105,8 +93,6 @@ export default {
       userName: '',
       userNumber: '',
       userCompany: '',
-      snackbar: false,
-      sbMsg: '',
       putId: ''
     }
   },
@@ -122,7 +108,7 @@ export default {
           this.users = r.data.users
         })
         .catch((e) => {
-          this.pop(e.message)
+          this.$store.commit('pop', { msg: e.message, color: 'error' })
         })
     },
     putDialog (user) {
@@ -139,21 +125,21 @@ export default {
         name: this.userName, number: this.userNumber, company: this.userCompany, lv: this.userLv
       })
         .then((r) => {
-          this.pop('사용자 수정 완료')
+          this.$store.commit('pop', { msg: '사용자 수정완료', color: 'success' })
           this.getUsers()
         })
         .catch((e) => {
-          this.pop(e.message)
+          this.$store.commit('pop', { msg: e.message, color: 'error' })
         })
     },
     delUser (id) {
       this.$axios.delete(`manage/user/${id}`)
         .then((r) => {
-          this.pop('사용자 삭제 완료')
+          this.$store.commit('pop', { msg: '사용자 삭제완료', color: 'success' })
           this.getUsers()
         })
         .catch((e) => {
-          this.pop(e.message)
+          this.$store.commit('pop', { msg: e.message, color: 'error' })
         })
     },
     getCompanys () {
@@ -163,11 +149,7 @@ export default {
             return el.name
           })
         })
-        .catch(e => this.pop(e.message, 'warning'))
-    },
-    pop (msg) {
-      this.snackbar = true
-      this.sbMsg = msg
+        .catch(e => this.$store.commit('pop', { msg: e.message, color: 'error' }))
     }
   }
 }

@@ -30,7 +30,7 @@
       <v-card-actions>
         <v-list-item class="grow">
           <v-list-item-avatar color="grey darken-3">
-            <v-img class="elevation-6" src="../assets/army2.png"></v-img>
+            <v-img class="elevation-6" src="../../assets/army2.png"></v-img>
           </v-list-item-avatar>
 
           <v-list-item-content>
@@ -111,7 +111,7 @@ export default {
           console.log(JSON.stringify(this.item))
         })
         .catch((e) => {
-          console.error(e.message)
+          this.$store.commit('pop', { msg: e.message, color: 'error' })
         })
     },
 
@@ -121,22 +121,24 @@ export default {
         title: this.suggestionTitle, context: this.suggestionContext
       })
         .then((r) => {
+          this.$store.commit('pop', { msg: '건의사항 수정완료', color: 'success' })
           this.getSuggestion(this.suggestionId)
         })
         .catch((e) => {
-          console.error(e.message)
+          this.$store.commit('pop', { msg: e.message, color: 'error' })
         }) // api에 put 요청
     },
 
     delSuggestion (id) {
       axios.delete(`suggestion/${id}`)
         .then((r) => {
+          this.$store.commit('pop', { msg: '건의사항 삭제완료', color: 'success' })
           this.$router.push({
             path: '/suggestion'
           })
         })
         .catch((e) => {
-          console.error(e.message)
+          this.$store.commit('pop', { msg: e.message, color: 'error' })
         })
     }
   }

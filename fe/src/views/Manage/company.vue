@@ -63,18 +63,6 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-snackbar
-      v-model="snackbar"
-    >
-      {{ sbMsg }}
-      <v-btn
-        color="pink"
-        flat
-        @click="snackbar = false"
-      >
-        Close
-      </v-btn>
-    </v-snackbar>
   </v-container>
 </template>
 <script>
@@ -86,9 +74,7 @@ export default {
       dialog: false,
       comName: '',
       comPhone: '',
-      snackbar: false,
       updateMode: false,
-      sbMsg: '',
       putId: ''
     }
   },
@@ -102,7 +88,7 @@ export default {
           this.companys = r.data.company
         })
         .catch((e) => {
-          this.pop(e.message)
+          this.$store.commit('pop', { msg: e.message, color: 'error' })
         })
     },
     putDialog (company) {
@@ -118,11 +104,11 @@ export default {
         name: this.comName, phoneNumber: this.comPhone
       })
         .then((r) => {
-          this.pop('부대 등록 완료')
+          this.$store.commit('pop', { msg: '부대 등록완료', color: 'success' })
           this.getCompany()
         })
         .catch((e) => {
-          this.pop(e.message)
+          this.$store.commit('pop', { msg: e.message, color: 'error' })
         })
     },
     putCompany () {
@@ -131,21 +117,21 @@ export default {
         name: this.comName, phoneNumber: this.comPhone
       })
         .then((r) => {
-          this.pop('부대 수정 완료')
+          this.$store.commit('pop', { msg: '부대 수정완료', color: 'success' })
           this.getCompany()
         })
         .catch((e) => {
-          this.pop(e.message)
+          this.$store.commit('pop', { msg: e.message, color: 'error' })
         })
     },
     delCompany (id) {
       this.$axios.delete(`manage/company/${id}`)
         .then((r) => {
-          this.pop('부대 삭제 완료')
+          this.$store.commit('pop', { msg: '부대 삭제완료', color: 'success' })
           this.getCompany()
         })
         .catch((e) => {
-          this.pop(e.message)
+          this.$store.commit('pop', { msg: e.message, color: 'error' })
         })
     },
     mdUp () {
@@ -153,10 +139,6 @@ export default {
       this.updateMode = false
       this.comName = ''
       this.comPhone = ''
-    },
-    pop (msg) {
-      this.snackbar = true
-      this.sbMsg = msg
     }
   }
 }

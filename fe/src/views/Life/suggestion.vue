@@ -7,7 +7,7 @@
 
         <v-list-item key="item.title" @click="rowClick(item, index)">
           <v-list-item-avatar>
-            <v-img :src="require('../assets/army2.png')"></v-img>
+            <v-img :src="require('../../assets/army2.png')"></v-img>
           </v-list-item-avatar>
 
           <v-list-item-content>
@@ -54,11 +54,6 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-
-    <v-snackbar v-model="snackbar">
-      {{ sbMsg }}
-      <v-btn color="green darken-3" flat @click="snackbar = false"> Close </v-btn>
-    </v-snackbar>
   </div>
 </template>
 
@@ -72,10 +67,8 @@ export default {
       like_icon: 'favorite',
       items: [],
       dialog: false,
-      snackbar: false,
       sug_title: '',
       sug_context: '',
-      sbMsg: '',
       updateMode: false
     }
   },
@@ -94,17 +87,13 @@ export default {
       this.sug_title = ''
       this.sug_context = ''
     },
-    pop (msg) {
-      this.snackbar = true
-      this.sbMsg = msg
-    },
     getSuggestions () {
       axios.get('suggestion')
         .then((r) => {
           this.items = r.data.suggestions.sort((a, b) => { return b.createdAt - a.createdAt })
         })
         .catch((e) => {
-          console.error(e.message)
+          this.$store.commit('pop', { msg: e.message, color: 'error' })
         })
     },
     postSuggestion () {
@@ -114,12 +103,11 @@ export default {
       this.dialog = false
       axios.post('suggestion', { title: this.sug_title, context: this.sug_context, createdAt: ISODate.toString() })
         .then((r) => {
-          this.pop(r)
-          // this.pop('건의사항 등록 완료')
+          this.$store.commit('pop', { msg: '건의사항 등록완료', color: 'success' })
           this.getSuggestions()
         })
         .catch((e) => {
-          this.pop(e.message)
+          this.$store.commit('pop', { msg: e.message, color: 'error' })
         })
     }
   }

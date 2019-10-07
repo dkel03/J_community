@@ -81,18 +81,6 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-snackbar
-      v-model="snackbar"
-    >
-      {{ sbMsg }}
-      <v-btn
-        color="pink"
-        flat
-        @click="snackbar = false"
-      >
-        Close
-      </v-btn>
-    </v-snackbar>
   </v-container>
 </template>
 <script>
@@ -105,8 +93,6 @@ export default {
       siteTitle: '',
       siteCopyright: '',
       siteDark: false,
-      snackbar: false,
-      sbMsg: '',
       putId: ''
     }
   },
@@ -120,7 +106,7 @@ export default {
           this.sites = r.data.sites
         })
         .catch((e) => {
-          this.pop(e.message)
+          this.$store.commit('pop', { msg: e.message, color: 'error' })
         })
     },
     putDialog (site) {
@@ -137,26 +123,22 @@ export default {
         icon: this.siteIcon, title: this.siteTitle, copyright: this.siteCopyright, dark: this.siteDark
       })
         .then((r) => {
-          this.pop('페이지 수정 완료')
+          this.$store.commit('pop', { msg: '사이트 수정완료', color: 'success' })
           this.getSites()
         })
         .catch((e) => {
-          this.pop(e.message)
+          this.$store.commit('pop', { msg: e.message, color: 'error' })
         })
     },
     delSite (id) {
       this.$axios.delete(`manage/site/${id}`)
         .then((r) => {
-          this.pop('페이지 삭제 완료')
+          this.$store.commit('pop', { msg: '사이트 삭제완료', color: 'success' })
           this.getSites()
         })
         .catch((e) => {
-          this.pop(e.message)
+          this.$store.commit('pop', { msg: e.message, color: 'error' })
         })
-    },
-    pop (msg) {
-      this.snackbar = true
-      this.sbMsg = msg
     }
   }
 }

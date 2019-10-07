@@ -27,11 +27,6 @@
         </v-card>
       </v-flex>
     </v-layout>
-
-    <v-snackbar v-model="snackbar">
-      {{ sbMsg }}
-      <v-btn color="error" flat @click="snackbar = false"> Close </v-btn>
-    </v-snackbar>
   </v-container>
 </template>
 
@@ -44,28 +39,23 @@ export default {
         id: '',
         pwd: '',
         remember: false
-      },
-      snackbar: false,
-      sbMsg: ''
+      }
     }
   },
   methods: {
-    pop (msg) {
-      this.snackbar = true
-      this.sbMsg = msg
-    },
     signIn () {
       axios.post('sign/in', this.form)
         .then(r => {
           if (!r.data.success) {
-            this.pop(r.data.msg)
+            this.$store.commit('pop', { msg: r.data.msg, color: 'warning' })
             return console.error(r.data.msg)
           }
           localStorage.setItem('token', r.data.token) // 로컬 스토리지에 토큰 저장
           this.$store.commit('getToken')
+          this.$store.commit('pop', { msg: '로그인 성공!!', color: 'success' })
           this.$router.push('/') // 페이지 이동
         })
-        .catch(e => console.error(e.message))
+        .catch(e => this.$store.commit('pop', { msg: e.message, color: 'error' }))
     }
   }
 }

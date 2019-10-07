@@ -3,14 +3,17 @@ import Router from 'vue-router'
 import axios from 'axios'
 // view pages
 import Home from './views/Home.vue'
-import Suggestion from './views/suggestion.vue'
-import SugDetail from './views/suggestion_detail.vue'
-import Letter from './views/letter.vue'
-import User from './views/user.vue'
-import Page from './views/page.vue'
-import Company from './views/company.vue'
-import Site from './views/site'
-import Map from './views/map'
+// life
+import Suggestion from './views/Life/suggestion.vue'
+import SugDetail from './views/Life/suggestion_detail.vue'
+import Map from './views/Life/map'
+// operate
+import Letter from './views/Operate/letter.vue'
+// manage
+import User from './views/Manage/user.vue'
+import Page from './views/Manage/page.vue'
+import Company from './views/Manage/company.vue'
+import Site from './views/Manage/site'
 
 Vue.use(Router)
 
@@ -74,21 +77,15 @@ export default new Router({
       component: SugDetail
     },
     {
-      path: '/letter',
-      name: '마음의 편지함',
-      component: Letter,
-      beforeEnter: pageCheck
-    },
-    {
       path: '/map',
       name: '지도',
       component: Map,
       beforeEnter: pageCheck
     },
     {
-      path: '/page',
-      name: '페이지',
-      component: Page,
+      path: '/letter',
+      name: '마음의 편지함',
+      component: Letter,
       beforeEnter: pageCheck
     },
     {
@@ -101,6 +98,12 @@ export default new Router({
       path: '/company',
       name: 'company',
       component: Company,
+      beforeEnter: pageCheck
+    },
+    {
+      path: '/page',
+      name: '페이지',
+      component: Page,
       beforeEnter: pageCheck
     },
     {
