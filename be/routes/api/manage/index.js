@@ -3,7 +3,7 @@ var createError = require('http-errors');
 var router = express.Router();
 
 router.all('*', (req, res, next) => {
-  if (req.user.lv) return res.send({ success: false, msg: '관리자만 이용가능합니다'})
+  if (req.user.lv) throw createError(403, '권한이 없습니다.')
   next()
 })
 
@@ -13,7 +13,7 @@ router.use('/site', require('./site'))
 router.use('/user', require('./user'))
 
 router.all('*', function(req, res, next) {
-  next(createError(404, '그런 api 없어'));
+  next(createError(404, `${req.path} not found`))
 });
 
 module.exports = router;

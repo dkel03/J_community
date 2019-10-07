@@ -143,16 +143,20 @@ export default {
           this.$store.commit('pop', { msg: '가입 완료', color: 'success' })
           this.$router.push('/sign')
         })
-        .catch(e => this.$store.commit('pop', { msg: e.message, color: 'warning' }))
+        .catch((e) => {
+          if (!e.response) this.$store.commit('pop', { msg: e.message, color: 'warning' })
+        })
     },
     getCompanys () {
-      this.$axios.get('company/register')
+      this.$axios.get('resources/company/register')
         .then((r) => {
           this.companys = r.data.company.map(function (el) {
             return el.name
           })
         })
-        .catch(e => this.$store.commit('pop', { msg: e.message, color: 'error' }))
+        .catch((e) => {
+          if (!e.response) this.$store.commit('pop', { msg: e.message, color: 'warning' })
+        })
     },
     clear () {
       this.form.id = ''

@@ -90,7 +90,7 @@ export default {
           this.pages = r.data.pages
         })
         .catch((e) => {
-          this.$store.commit('pop', { msg: e.message, color: 'error' })
+          if (!e.response) this.$store.commit('pop', { msg: e.message, color: 'error' })
         })
     },
     putDialog (page) {
@@ -109,7 +109,7 @@ export default {
           this.getPages()
         })
         .catch((e) => {
-          this.$store.commit('pop', { msg: e.message, color: 'error' })
+          if (!e.response) this.$store.commit('pop', { msg: e.message, color: 'error' })
         })
     },
     delPage (id) {
@@ -119,12 +119,8 @@ export default {
           this.getPages()
         })
         .catch((e) => {
-          this.$store.commit('pop', { msg: e.message, color: 'error' })
+          if (!e.response) this.$store.commit('pop', { msg: e.message, color: 'error' })
         })
-    },
-    pop (msg) {
-      this.snackbar = true
-      this.sbMsg = msg
     }
   }
 }

@@ -32,7 +32,9 @@ const Site = require('../../../../models/sites')
       res.send({ success: false, msg: e.message })
     })
 })
- router.all('*', function(req, res, next) {
-  next(createError(404, '그런 api 없어'));
+
+router.all('*', function(req, res, next) {
+  next(createError(404, `${req.path} not found`))
 });
- module.exports = router;
+
+module.exports = router;

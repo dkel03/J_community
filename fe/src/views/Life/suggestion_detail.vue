@@ -103,7 +103,7 @@ export default {
   },
   methods: {
     getSuggestion (sugId) {
-      axios.get('https://nemv-stack.run.goorm.io/api/suggestion')
+      axios.get('resources/suggestion')
         .then((r) => {
           this.item = r.data.suggestions.filter(el => el._id === sugId)[0]
           this.suggestionTitle = this.item.title
@@ -111,13 +111,13 @@ export default {
           console.log(JSON.stringify(this.item))
         })
         .catch((e) => {
-          this.$store.commit('pop', { msg: e.message, color: 'error' })
+          if (!e.response) this.$store.commit('pop', { msg: e.message, color: 'error' })
         })
     },
 
     putSuggestion () {
       this.dialog = false
-      axios.put(`suggestion/${this.suggestionId}`, {
+      axios.put(`resources/suggestion/${this.suggestionId}`, {
         title: this.suggestionTitle, context: this.suggestionContext
       })
         .then((r) => {
@@ -125,12 +125,12 @@ export default {
           this.getSuggestion(this.suggestionId)
         })
         .catch((e) => {
-          this.$store.commit('pop', { msg: e.message, color: 'error' })
+          if (!e.response) this.$store.commit('pop', { msg: e.message, color: 'error' })
         }) // api에 put 요청
     },
 
     delSuggestion (id) {
-      axios.delete(`suggestion/${id}`)
+      axios.delete(`resources/suggestion/${id}`)
         .then((r) => {
           this.$store.commit('pop', { msg: '건의사항 삭제완료', color: 'success' })
           this.$router.push({
@@ -138,7 +138,7 @@ export default {
           })
         })
         .catch((e) => {
-          this.$store.commit('pop', { msg: e.message, color: 'error' })
+          if (!e.response) this.$store.commit('pop', { msg: e.message, color: 'error' })
         })
     }
   }

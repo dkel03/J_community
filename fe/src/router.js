@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import axios from 'axios'
+import store from './store'
 // view pages
 import Home from './views/Home.vue'
 // life
@@ -39,19 +40,36 @@ axios.interceptors.response.use(function (response) {
   if (token) localStorage.setItem('token', token)
   return response
 }, function (error) {
-  // Do something with response error
+  console.log(error.response)
+  switch (error.response.status) {
+    case 400:
+      console.log(error.response.data.msg)
+      store.commit('pop', { msg: `잘못된 요청입니다(${error.response.status}:${error.response.data.msg})`, color: 'error' })
+      break
+    case 401:
+      store.commit('delToken')
+      store.commit('pop', { msg: `인증 오류입니다(${error.response.status}:${error.response.data.msg})`, color: 'error' })
+      break
+    case 403:
+      store.commit('pop', { msg: `이용 권한이 없습니다(${error.response.status}:${error.response.data.msg})`, color: 'warning' })
+      break
+    default:
+      store.commit('pop', { msg: `알수 없는 오류입니다(${error.response.status}:${error.response.data.msg})`, color: 'error' })
+      break
+  }
   return Promise.reject(error)
 })
 
 const pageCheck = (to, from, next) => {
-  axios.post('page', { name: to.path.replace('/', '') })
+  axios.post('resources/page', { name: to.path.replace('/', '') })
   // 넘어가면서 json 객체를 반환해서 조건문 사용해주었음
     .then((r) => {
       if (!r.data.success) throw new Error(r.data.msg)
       next()
     })
     .catch((e) => {
-      next(`/block/${e.message}`)
+      if (!e.response) store.commit('pop', { msg: e.message, color: 'warning' })
+      next(false)
     })
 }
 

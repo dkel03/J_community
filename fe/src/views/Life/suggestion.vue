@@ -88,12 +88,12 @@ export default {
       this.sug_context = ''
     },
     getSuggestions () {
-      axios.get('suggestion')
+      axios.get('resources/suggestion')
         .then((r) => {
           this.items = r.data.suggestions.sort((a, b) => { return b.createdAt - a.createdAt })
         })
         .catch((e) => {
-          this.$store.commit('pop', { msg: e.message, color: 'error' })
+          if (!e.response) this.$store.commit('pop', { msg: e.message, color: 'error' })
         })
     },
     postSuggestion () {
@@ -101,13 +101,13 @@ export default {
       var ISOData = d.toISOString()
       var ISODate = ISOData.split('T', 1)
       this.dialog = false
-      axios.post('suggestion', { title: this.sug_title, context: this.sug_context, createdAt: ISODate.toString() })
+      axios.post('resources/suggestion', { title: this.sug_title, context: this.sug_context, createdAt: ISODate.toString() })
         .then((r) => {
           this.$store.commit('pop', { msg: '건의사항 등록완료', color: 'success' })
           this.getSuggestions()
         })
         .catch((e) => {
-          this.$store.commit('pop', { msg: e.message, color: 'error' })
+          if (!e.response) this.$store.commit('pop', { msg: e.message, color: 'error' })
         })
     }
   }

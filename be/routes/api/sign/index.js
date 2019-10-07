@@ -24,11 +24,11 @@ const signToken = (id, name, number, lv, company, rmb) => {
   });
 };
 
-router.post('/in', function(req, res) {
+router.post('/in', function(req, res, next) {
   const { id, pwd, remember } = req.body;
-  if (!id) return res.send({ success: false, msg: '아이디가 없습니다.' });
-  if (!pwd) return res.send({ success: false, msg: '비밀번호가 없습니다.' });
-  if (remember === undefined) return res.send({ success: false, msg: '기억하기가 없습니다.' });
+  if (!id) throw createError(400, '아이디가 없습니다') 
+  if (!pwd) throw createError(400, '비밀번호가 없습니다')
+  if (remember === undefined) throw createError(400, '기억하기가 없습니다.')
   User.findOneAndUpdate({ id }, { $inc: { inCnt: 1 } })
     // sign.vue에서 로그인시 id와 pwd의 유효성을 검사하고 토큰을 발행하는 부분 {id}= 폼에서 입력받은 id
     // 그리고 로그인 횟수를 1 증가시킴
@@ -51,7 +51,7 @@ router.post('/out', function(req, res) {
 });
 
 router.all('*', function(req, res, next) {
-  next(createError(404, 'sign: 그런 api 없어용'));
+  next(createError(404, `${req.path} not found`))
 });
 
 module.exports = router;

@@ -129,7 +129,7 @@ export default {
           this.getUsers()
         })
         .catch((e) => {
-          this.$store.commit('pop', { msg: e.message, color: 'error' })
+          if (!e.response) this.$store.commit('pop', { msg: e.message, color: 'error' })
         })
     },
     delUser (id) {
@@ -139,17 +139,19 @@ export default {
           this.getUsers()
         })
         .catch((e) => {
-          this.$store.commit('pop', { msg: e.message, color: 'error' })
+          if (!e.response) this.$store.commit('pop', { msg: e.message, color: 'error' })
         })
     },
     getCompanys () {
-      this.$axios.get('company/register')
+      this.$axios.get('resources/company/register')
         .then((r) => {
           this.companys = r.data.company.map(function (el) {
             return el.name
           })
         })
-        .catch(e => this.$store.commit('pop', { msg: e.message, color: 'error' }))
+        .catch((e) => {
+          if (!e.response) this.$store.commit('pop', { msg: e.message, color: 'error' })
+        })
     }
   }
 }

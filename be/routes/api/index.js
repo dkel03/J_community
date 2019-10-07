@@ -52,7 +52,6 @@ const getToken = async(t) => {
 /* 토큰 검사 필요없는 페이지 */
 router.use('/sign', require('./sign'));
 router.use('/register', require('./register'));
-router.use('/site', require('./site'));
 
 /* 토큰 검사 */
 router.all('*', (req, res, next) => {
@@ -63,18 +62,17 @@ router.all('*', (req, res, next) => {
       req.token = v.token
       next()
     })
-    .catch(e => next(createError(401, e.message)))
+    .catch(e => next(createError(401, e.message))) // 토큰 만료 혹은 잘못된 토큰일 때 401 인증 오류
 });
 
 /* 토큰 검사 필요한 페이지 */
-router.use('/company', require('./company'));
-router.use('/manage', require('./manage'));
-router.use('/page', require('./page'));
-router.use('/suggestion', require('./suggestion'));
-router.use('/user', require('./user'));
+router.use('/manage', require('./manage')); // 관리 페이지(lv0) api
+router.use('/resources', require('./resources')) // 자원 접근 api
 
 /* 없는 페이지 처리 */
-router.all('*', require('./notFound'));
+router.all('*', function(req, res, next) {
+  next(createError(404, `${req.path} not found`))
+});
 
 module.exports = router;
 

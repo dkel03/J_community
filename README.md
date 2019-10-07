@@ -10,13 +10,13 @@
 ### 구현 세부 정보
 ##### 백엔드
 - **REST ful**한 API
+- API 디렉토리는 resource기반 작명
+- **http-errors** 모듈 이용한 API에서의 HTTP 예외처리 (200,400,401,403,404,500 사용)
 - 미들웨어 통한 권한별 접근제어
 - 회원가입시 암호화 설정(**crypto** 모듈 사용, 단방향 암호화)
 - 오픈소스이므로 **config**파일을 통한 핵심 설정파일(서버주소, 보안 등) 분리
 - token 발급 및 갱신 로직 (**JWT**: jsonwebtoken 모듈사용)
 - **moment.js** 모듈 도입(토큰 재발급시 사용)
-- **http-errors** 모듈 이용한 API에서의 HTTP 예외처리
-
 
 ##### 프론트엔드
 - 로그인시 **localStorage**에 **token**정보 저장
@@ -28,8 +28,10 @@
 - 공용 알림메세지 사용 (**Vuex**로 전역등록, App.vue에 **snack-bar** 구현)
 ```javascript
 // pop 사용법 (axios 응답에 대해 사용)
-this.$store.commit('pop', { msg: e.message, color: 'error' })
+if(!e.response) this.$store.commit('pop', { msg: e.message, color: 'error' })
+// if문이 붙는 이유는 router.js에서 api가 보낸 http-errors를 처리하기 때문이다(중복 snackbar 활성화 방지)
 ```
+- 
 ---
 
 ### config 파일 세팅 방법.

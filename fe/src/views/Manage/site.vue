@@ -106,7 +106,7 @@ export default {
           this.sites = r.data.sites
         })
         .catch((e) => {
-          this.$store.commit('pop', { msg: e.message, color: 'error' })
+          if (!e.response) this.$store.commit('pop', { msg: e.message, color: 'error' })
         })
     },
     putDialog (site) {
@@ -127,7 +127,7 @@ export default {
           this.getSites()
         })
         .catch((e) => {
-          this.$store.commit('pop', { msg: e.message, color: 'error' })
+          if (!e.response) this.$store.commit('pop', { msg: e.message, color: 'error' })
         })
     },
     delSite (id) {
@@ -137,7 +137,7 @@ export default {
           this.getSites()
         })
         .catch((e) => {
-          this.$store.commit('pop', { msg: e.message, color: 'error' })
+          if (!e.response) this.$store.commit('pop', { msg: e.message, color: 'error' })
         })
     }
   }

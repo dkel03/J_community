@@ -1,7 +1,7 @@
 var express = require('express');
 var createError = require('http-errors');
 var router = express.Router();
-const Site = require('../../../models/sites');
+const Site = require('../../../../models/sites');
 
 router.get('/', (req, res, next) => {
   // return res.send({ success: true, d: req.user })

@@ -1,7 +1,7 @@
 var express = require('express');
 var createError = require('http-errors');
 var router = express.Router();
-const Company = require('../../../models/companys');
+const Company = require('../../../../models/companys');
 
 /* Routing Methods */
 router.get('/home', function(req, res, next) {
@@ -26,7 +26,7 @@ router.get('/register', function(req, res, next) {
 });
 
 router.all('*', function(req, res, next) {
-  next(createError(404, 'company: 그런 api 없어용'));
+  next(createError(404, `${req.path} not found`))
 });
 
 module.exports = router;

@@ -30,7 +30,7 @@ router.post('/', function(req, res) {
 });
 
 router.all('*', function(req, res, next) {
-  next(createError(404, 'sign: 그런 api 없어용'));
+  next(createError(404, `${req.path} not found`))
 });
 
 module.exports = router;

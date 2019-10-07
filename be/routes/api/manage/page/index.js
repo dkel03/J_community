@@ -36,7 +36,7 @@ router.delete('/:_id', (req, res, next) => {
 })
 
 router.all('*', function(req, res, next) {
-  next(createError(404, '그런 api 없어'));
+  next(createError(404, `${req.path} not found`))
 });
 
 module.exports = router;

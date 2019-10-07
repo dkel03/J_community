@@ -88,7 +88,7 @@ export default {
           this.companys = r.data.company
         })
         .catch((e) => {
-          this.$store.commit('pop', { msg: e.message, color: 'error' })
+          if (!e.response) this.$store.commit('pop', { msg: e.message, color: 'error' })
         })
     },
     putDialog (company) {
@@ -108,7 +108,7 @@ export default {
           this.getCompany()
         })
         .catch((e) => {
-          this.$store.commit('pop', { msg: e.message, color: 'error' })
+          if (!e.response) this.$store.commit('pop', { msg: e.message, color: 'error' })
         })
     },
     putCompany () {
@@ -121,7 +121,7 @@ export default {
           this.getCompany()
         })
         .catch((e) => {
-          this.$store.commit('pop', { msg: e.message, color: 'error' })
+          if (!e.response) this.$store.commit('pop', { msg: e.message, color: 'error' })
         })
     },
     delCompany (id) {
@@ -131,7 +131,7 @@ export default {
           this.getCompany()
         })
         .catch((e) => {
-          this.$store.commit('pop', { msg: e.message, color: 'error' })
+          if (!e.response) this.$store.commit('pop', { msg: e.message, color: 'error' })
         })
     },
     mdUp () {

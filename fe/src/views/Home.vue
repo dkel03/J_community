@@ -39,14 +39,12 @@ import axios from 'axios'
 export default {
   data () {
     return {
-      suggestions: [],
       company: {},
       user: {}
     }
   },
   mounted () {
     this.getCompany()
-    this.getSuggestions()
   },
   watch: {
     '$store.state.token': {
@@ -57,23 +55,14 @@ export default {
   },
   methods: {
     getCompany () {
-      axios.get('company/home')
+      axios.get('resources/company/home')
         .then((r) => {
           console.log(r)
           this.company = r.data.company
           this.user = r.data.user
         })
         .catch((e) => {
-          this.$store.commit('pop', { msg: e.message, color: 'error' })
-        })
-    },
-    getSuggestions () {
-      axios.get('suggestion')
-        .then((r) => {
-          this.suggestions = r.data.suggestions
-        })
-        .catch((e) => {
-          this.$store.commit('pop', { msg: e.message, color: 'error' })
+          if (!e.response) this.$store.commit('pop', { msg: e.message, color: 'error' })
         })
     }
   }

@@ -55,7 +55,9 @@ export default {
           this.$store.commit('pop', { msg: '로그인 성공!!', color: 'success' })
           this.$router.push('/') // 페이지 이동
         })
-        .catch(e => this.$store.commit('pop', { msg: e.message, color: 'error' }))
+        .catch((e) => {
+          if (!e.response) this.$store.commit('pop', { msg: e.message, color: 'error' })
+        })
     }
   }
 }
