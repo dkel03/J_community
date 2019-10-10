@@ -3,9 +3,9 @@ var createError = require('http-errors');
 var router = express.Router();
 
 /* 권한 없이 접근 가능 */
-router.use('/company', require('./company'))
-router.use('/page', require('./page'))
-router.use('/site', require('./site'));
+router.use('/companys', require('./companys'))
+router.use('/pages', require('./pages'))
+router.use('/sites', require('./sites'));
 
 
 router.all('*', (req, res, next) => {
@@ -14,7 +14,7 @@ router.all('*', (req, res, next) => {
 })
 
 /* 권한에 따른 접근 허용(2이상은 접근불가) */
-router.use('/suggestion', require('./suggestion'))
+router.use('/suggestions', require('./suggestions'))
 
 /* 페이지 없을 시 */
 router.all('*', function(req, res, next) {

@@ -61,7 +61,7 @@ axios.interceptors.response.use(function (response) {
 })
 
 const pageCheck = (to, from, next) => {
-  axios.post('resources/page', { name: to.path.replace('/', '') })
+  axios.post('resources/pages', { name: to.path.replace('/', '') })
   // 넘어가면서 json 객체를 반환해서 조건문 사용해주었음
     .then((r) => {
       if (!r.data.success) throw new Error(r.data.msg)

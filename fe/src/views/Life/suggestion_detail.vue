@@ -4,22 +4,25 @@
       <v-card-title>
         <span class="title font-weight-bold">{{item.title}}</span>
         <div class="flex-grow-1"></div>
-        <v-menu bottom left>
-            <v-btn dark icon v-on="on">
-              <v-icon v-html="more"></v-icon>
-            </v-btn>
-
+        <v-menu bottom left transition="scale-transition">
+          <template v-slot:activator="{ on }">
+            <v-icon v-on="on">more_vert</v-icon>
+          </template>
           <v-list>
-            <v-list-item
-              v-for="(item, i) in items"
-              :key="i"
-            >
-              <v-list-item-title>{{ item.title }}</v-list-item-title>
+            <v-list-item>
+              <v-btn small class="float-right ma-2" tile outlined color="error" @click="delSuggestion(suggestionId)">
+                <v-icon left>clear</v-icon>삭제
+              </v-btn>
+            </v-list-item>
+            <v-list-item>
+              <v-btn small class="float-right ma-2" tile outlined color="success" @click="dialog = true">
+                <v-icon left>create</v-icon>수정
+              </v-btn>
             </v-list-item>
           </v-list>
         </v-menu>
       </v-card-title>
-      <v-card-text class="font-weight-light">{{item.createdAt}}</v-card-text>
+      <v-card-text class="font-weight-light">{{id2date(item._id)}}</v-card-text>
 
       <v-card-text class="font-weight-bold">
         {{item.context}}
@@ -34,25 +37,18 @@
           </v-list-item-avatar>
 
           <v-list-item-content>
-            <v-list-item-title>{{item.user}}</v-list-item-title>
+            <v-list-item-title>{{item._user.name}}</v-list-item-title>
           </v-list-item-content>
 
           <v-row align="center" justify="end">
             <v-card-actions>
               <v-btn icon><v-icon v-html="like_icon" color="green darken-3"></v-icon></v-btn>
             </v-card-actions>
-            <span class="subheading">{{item.likes}}</span>
+            <span class="subheading">{{item.cnt.like}}</span>
           </v-row>
         </v-list-item>
       </v-card-actions>
     </v-card>
-
-    <v-btn small class="float-right ma-2" tile outlined color="success" @click="dialog = true">
-      <v-icon left>create</v-icon> Edit
-    </v-btn>
-    <v-btn small class="float-right ma-2" tile outlined color="error" @click="delSuggestion(suggestionId)">
-      <v-icon left>clear</v-icon> Delete
-    </v-btn>
 
     <v-dialog v-model="dialog" persistent max-width="600px">
       <v-card>
@@ -63,10 +59,10 @@
           <v-container>
             <v-row>
               <v-col cols="12">
-                <v-text-field label="title*" v-model="suggestionTitle" required></v-text-field>
+                <v-text-field label="title*" v-model="form.title" required></v-text-field>
               </v-col>
               <v-col cols="12">
-                <v-textarea label="context*" v-model="suggestionContext" required></v-textarea>
+                <v-textarea label="context*" v-model="form.context" required></v-textarea>
               </v-col>
             </v-row>
           </v-container>
@@ -89,9 +85,15 @@ export default {
   data () {
     const suggestionId = this.$route.params.suggestionId
     return {
+      menus: [
+        { name: '수정' },
+        { name: '삭제' }
+      ],
       suggestionId: suggestionId,
-      suggestionTitle: '',
-      suggestionContext: '',
+      form: {
+        title: '',
+        context: ''
+      },
       item: {},
       like_icon: 'favorite',
       more: 'more-vert',
@@ -103,12 +105,11 @@ export default {
   },
   methods: {
     getSuggestion (sugId) {
-      axios.get('resources/suggestion')
+      axios.get(`resources/suggestions/one/${sugId}`)
         .then((r) => {
-          this.item = r.data.suggestions.filter(el => el._id === sugId)[0]
-          this.suggestionTitle = this.item.title
-          this.suggestionContext = this.item.context
-          console.log(JSON.stringify(this.item))
+          this.item = r.data.d
+          this.form.title = this.item.title
+          this.form.context = this.item.context
         })
         .catch((e) => {
           if (!e.response) this.$store.commit('pop', { msg: e.message, color: 'error' })
@@ -117,9 +118,7 @@ export default {
 
     putSuggestion () {
       this.dialog = false
-      axios.put(`resources/suggestion/${this.suggestionId}`, {
-        title: this.suggestionTitle, context: this.suggestionContext
-      })
+      axios.put(`resources/suggestions/${this.suggestionId}`, this.form)
         .then((r) => {
           this.$store.commit('pop', { msg: '건의사항 수정완료', color: 'success' })
           this.getSuggestion(this.suggestionId)
@@ -130,7 +129,7 @@ export default {
     },
 
     delSuggestion (id) {
-      axios.delete(`resources/suggestion/${id}`)
+      axios.delete(`resources/suggestions/${id}`)
         .then((r) => {
           this.$store.commit('pop', { msg: '건의사항 삭제완료', color: 'success' })
           this.$router.push({
@@ -140,6 +139,10 @@ export default {
         .catch((e) => {
           if (!e.response) this.$store.commit('pop', { msg: e.message, color: 'error' })
         })
+    },
+    id2date (_id) {
+      if (!_id) return '잘못된 시간 정보'
+      return new Date(parseInt(_id.substring(0, 8), 16) * 1000).toLocaleString()
     }
   }
 }

@@ -52,9 +52,9 @@
               ></v-text-field>
               <v-select
                 prepend-icon="account_balance"
-                v-model="form.company"
+                v-model="form._company"
                 v-validate="'required'"
-                :items="companys"
+                :items="comlist"
                 :error-messages="errors.collect('company')"
                 label="부대"
                 data-vv-name="company"
@@ -97,10 +97,11 @@ export default {
       id: '',
       pwd: '',
       name: '',
-      company: '',
+      _company: '',
       number: ''
     },
     companys: [],
+    comlist: [],
     agree: null,
     dictionary: {
       messages: ko.messages,
@@ -136,6 +137,7 @@ export default {
       this.$validator.validateAll()
         .then(r => {
           if (!r) throw new Error('모두 기입해주세요')
+          this.form._company = this.searchCompanyid(this.form._company, this.companys)
           return this.$axios.post('register', this.form)
         })
         .then(r => {
@@ -148,9 +150,10 @@ export default {
         })
     },
     getCompanys () {
-      this.$axios.get('resources/company/register')
+      this.$axios.get('resources/companys/list')
         .then((r) => {
-          this.companys = r.data.company.map(function (el) {
+          this.companys = r.data.ds
+          this.comlist = r.data.ds.map((el) => {
             return el.name
           })
         })
@@ -164,6 +167,11 @@ export default {
       this.form.name = ''
       this.agree = null
       this.$validator.reset()
+    },
+    searchCompanyid (nameKey, myArray) {
+      for (var i = 0; i < myArray.length; i++) {
+        if (myArray[i].name === nameKey) return myArray[i]
+      }
     }
   }
 }

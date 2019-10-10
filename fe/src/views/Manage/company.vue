@@ -85,7 +85,7 @@ export default {
     getCompany () {
       this.$axios.get('manage/company')
         .then((r) => {
-          this.companys = r.data.company
+          this.companys = r.data.ds
         })
         .catch((e) => {
           if (!e.response) this.$store.commit('pop', { msg: e.message, color: 'error' })

@@ -13,7 +13,7 @@
             <div>
               <div>이름: {{user.name}}</div>
               <div>군번: {{user.number}}</div>
-              <div>부대: {{user.company}}</div>
+              <div>부대: {{user._company.name}}</div>
               <div>권한: {{user.lv}}</div>
               <div>로그인 횟수: {{user.inCnt}}</div>
             </div>
@@ -40,7 +40,7 @@
                   hint="홍길동"
                   persistent-hint
                   required
-                  v-model="userName"
+                  v-model="form.name"
                 ></v-text-field>
               </v-flex>
               <v-flex xs12 sm6 md4>
@@ -49,15 +49,15 @@
                   hint="홍길동"
                   persistent-hint
                   required
-                  v-model="userNumber"
+                  v-model="form.number"
                 ></v-text-field>
               </v-flex>
               <v-flex xs12 sm6 md4>
                 <v-select
-                  :items="companys"
+                  :items="comlist"
                   label="부대"
                   required
-                  v-model="userCompany"
+                  v-model="form._company"
                 ></v-select>
               </v-flex>
               <v-flex xs12 sm6>
@@ -65,7 +65,7 @@
                   :items="userLvs"
                   label="권한"
                   required
-                  v-model="userLv"
+                  v-model="form.lv"
                 ></v-select>
               </v-flex>
             </v-layout>
@@ -86,13 +86,16 @@ export default {
   data () {
     return {
       companys: [],
+      comlist: [],
       users: [],
       dialog: false,
       userLvs: [],
-      userLv: 0,
-      userName: '',
-      userNumber: '',
-      userCompany: '',
+      form: {
+        name: '',
+        number: '',
+        _company: '',
+        lv: 0
+      },
       putId: ''
     }
   },
@@ -105,7 +108,7 @@ export default {
     getUsers () {
       this.$axios.get(`manage/user`)
         .then((r) => {
-          this.users = r.data.users
+          this.users = r.data.ds
         })
         .catch((e) => {
           this.$store.commit('pop', { msg: e.message, color: 'error' })
@@ -114,16 +117,15 @@ export default {
     putDialog (user) {
       this.putId = user._id
       this.dialog = true
-      this.userName = user.name
-      this.userNumber = user.number
-      this.userCompany = user.company
-      this.userLv = user.lv
+      this.form.name = user.name
+      this.form.number = user.number
+      this.form._company = user._company.name
+      this.form.lv = user.lv
     },
     putUser () {
       this.dialog = false
-      this.$axios.put(`manage/user/${this.putId}`, {
-        name: this.userName, number: this.userNumber, company: this.userCompany, lv: this.userLv
-      })
+      this.form._company = this.searchCompanyid(this.form._company, this.companys)
+      this.$axios.put(`manage/user/${this.putId}`, this.form)
         .then((r) => {
           this.$store.commit('pop', { msg: '사용자 수정완료', color: 'success' })
           this.getUsers()
@@ -143,15 +145,21 @@ export default {
         })
     },
     getCompanys () {
-      this.$axios.get('resources/company/register')
+      this.$axios.get('resources/companys/list')
         .then((r) => {
-          this.companys = r.data.company.map(function (el) {
+          this.companys = r.data.ds
+          this.comlist = r.data.ds.map((el) => {
             return el.name
           })
         })
         .catch((e) => {
           if (!e.response) this.$store.commit('pop', { msg: e.message, color: 'error' })
         })
+    },
+    searchCompanyid (nameKey, myArray) {
+      for (var i = 0; i < myArray.length; i++) {
+        if (myArray[i].name === nameKey) return myArray[i]
+      }
     }
   }
 }

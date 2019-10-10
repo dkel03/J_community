@@ -4,9 +4,9 @@ var router = express.Router();
 const User = require('../../../../models/users')
 
 router.get('/', function(req, res, next) {
-  User.find().select('-pwd')
-    .then(r => {
-      res.send({ success: true, users: r, token: req.token  })
+  User.find().select('-pwd').populate('_company', 'name')
+    .then(rs => {
+      res.send({ success: true, ds: rs, token: req.token  })
     })
     .catch(e => {
       res.send({ success: false, msg: e.message })

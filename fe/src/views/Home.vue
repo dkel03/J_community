@@ -39,8 +39,7 @@ import axios from 'axios'
 export default {
   data () {
     return {
-      company: {},
-      user: {}
+      company: {}
     }
   },
   mounted () {
@@ -55,11 +54,10 @@ export default {
   },
   methods: {
     getCompany () {
-      axios.get('resources/company/home')
+      axios.get('resources/companys/one')
         .then((r) => {
           console.log(r)
-          this.company = r.data.company
-          this.user = r.data.user
+          this.company = r.data.d
         })
         .catch((e) => {
           if (!e.response) this.$store.commit('pop', { msg: e.message, color: 'error' })

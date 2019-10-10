@@ -216,7 +216,7 @@ export default {
       this.$router.push('/')
     },
     getSite () {
-      this.$axios.get('/resources/site')
+      this.$axios.get('/resources/sites')
         .then(r => {
           console.log(r.data.d)
           this.siteIcon = r.data.d.icon

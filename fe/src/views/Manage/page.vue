@@ -87,7 +87,7 @@ export default {
     getPages () {
       this.$axios.get('manage/page')
         .then((r) => {
-          this.pages = r.data.pages
+          this.pages = r.data.ds
         })
         .catch((e) => {
           if (!e.response) this.$store.commit('pop', { msg: e.message, color: 'error' })

@@ -103,7 +103,7 @@ export default {
     getSites () {
       this.$axios.get('manage/site')
         .then((r) => {
-          this.sites = r.data.sites
+          this.sites = r.data.ds
         })
         .catch((e) => {
           if (!e.response) this.$store.commit('pop', { msg: e.message, color: 'error' })

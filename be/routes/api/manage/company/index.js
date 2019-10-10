@@ -6,9 +6,8 @@ const Company = require('../../../../models/companys');
 /* Routing Methods */
 router.get('/', function(req, res, next) {
   Company.find()
-    .then(r => {
-      console.log(r)
-      res.send({ success: true, company: r, token: req.token  });
+    .then(rs => {
+      res.send({ success: true, ds: rs, token: req.token  });
     })
     .catch(e => {
       res.send({ success: false });

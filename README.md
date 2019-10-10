@@ -31,7 +31,7 @@
 if(!e.response) this.$store.commit('pop', { msg: e.message, color: 'error' })
 // if문이 붙는 이유는 router.js에서 api가 보낸 http-errors를 처리하기 때문이다(중복 snackbar 활성화 방지)
 ```
-- 
+- 건의사항 및 마음의 편지함에는 **Vue data Table**을 사용하여 검색, 정렬기능 구현(서버사이드 pagenation 준비중)
 ---
 
 ### config 파일 세팅 방법.

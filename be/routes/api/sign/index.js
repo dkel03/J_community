@@ -8,7 +8,7 @@ const jwt = require('jsonwebtoken');
 const cfg = require('../../../../config');
 const User = require('../../../models/users');
 
-const signToken = (id, name, number, lv, company, rmb) => {
+const signToken = (_id, id, name, lv, _company, rmb) => {
   return new Promise((resolve, reject) => {
     const o = {
       issuer: cfg.jwt.issuer,
@@ -17,7 +17,7 @@ const signToken = (id, name, number, lv, company, rmb) => {
       algorithm: cfg.jwt.algorithm
     };
     if (rmb) o.expiresIn = cfg.jwt.expiresInRemember; // 6일
-    jwt.sign({ id, name, number, lv, company, rmb }, cfg.jwt.secretKey, o, (err, token) => {
+    jwt.sign({ _id, id, name, lv, _company, rmb }, cfg.jwt.secretKey, o, (err, token) => {
       if (err) reject(err);
       resolve(token);
     });
@@ -36,7 +36,7 @@ router.post('/in', function(req, res, next) {
       if (!r) throw new Error('존재하지 않는 아이디입니다.');
       const p = crypto.scryptSync(pwd, r._id.toString(), 64, { N: 1024 }).toString('hex');
       if (r.pwd !== p) throw new Error('비밀번호가 틀립니다.'); // 폼에서 받은 비밀번호를 다시 암호화해서 DB의 암호화된 비밀번호와 비교
-      return signToken(r.id, r.name, r.number, r.lv, r.company, remember);
+      return signToken(r._id, r.id, r.name, r.lv, r._company, remember);
     })
     .then(r => {
       res.send({ success: true, token: r });

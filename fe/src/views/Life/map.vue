@@ -10,6 +10,7 @@
               v-model="keyWord"
               label="현재 위치를 키워드로 검색해보세요!"
               outlined
+              append-icon="search"
               clearable
               style="margin-left:30px;margin-right:20px;width:65%"
             ></v-text-field>

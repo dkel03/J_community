@@ -5,8 +5,8 @@ const Page = require('../../../../models/pages')
 
 router.get('/', function(req, res, next) {
   Page.find()
-    .then(r => {
-      res.send({ success: true, pages: r, token: req.token  })
+    .then(rs => {
+      res.send({ success: true, ds: rs, token: req.token  })
     })
     .catch(e => {
       res.send({ success: false })

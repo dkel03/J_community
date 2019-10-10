@@ -1,28 +1,35 @@
 const mongoose = require('mongoose');
 const crypto = require('crypto');
 const cfg = require('../../config');
+const Company = require('./companys');
 
 mongoose.set('useCreateIndex', true);
-const comSchema = new mongoose.Schema({
-  // 부대 정보 스키마, 나중에 따로 분리해야함
-  name: { type: String, default: '', index: true },
-  phoneNumber: { type: String, default: '', index: true }
-});
 
 const userSchema = new mongoose.Schema({
   id: { type: String, default: '', unique: true, index: true },
   pwd: { type: String, default: '' },
   name: { type: String, default: '' },
   number: { type: String, default: '' },
-  company: { type: String, default: '' },
   lv: { type: Number, default: 2 },
   inCnt: { type: Number, default: 0 }, //add
-  retry: { type: Number, default: 0 }
+  retry: { type: Number, default: 0 },
+  _company: { type: mongoose.Schema.Types.ObjectId, ref: 'Company', index: true },
 });
 
 const User = mongoose.model('User', userSchema);
 
+const com = null
 // User.collection.dropIndexes('id_1')
+
+Company.findOne({ name: cfg.company.name}) //company 찾아오는 구문
+  .then((r) => {
+    this.com = r._id
+    console.log(this.com)
+  })
+  .catch((e) => {
+    console.error(e.message);
+  })
+
 User.findOne({ id: cfg.admin.id }) // admin계정이 없을 경우 생성하는 구문, 있으면 생성 X
   .then(r => {
     if (!r)
@@ -31,7 +38,7 @@ User.findOne({ id: cfg.admin.id }) // admin계정이 없을 경우 생성하는 
         pwd: cfg.admin.pwd,
         name: cfg.admin.name,
         number: cfg.admin.number,
-        company: cfg.admin.company,
+        _company: this.com,
         lv: 0
       });
     return Promise.resolve(null);
@@ -40,7 +47,7 @@ User.findOne({ id: cfg.admin.id }) // admin계정이 없을 경우 생성하는 
     if (!r) return Promise.resolve(null);
     if (r) console.log(`admin:${r.id} created!`);
     const pwd = crypto.scryptSync(r.pwd, r._id.toString(), 64, { N: 1024 }).toString('hex');
-    return User.updateOne({ _id: r._id }, { $set: { pwd } });
+    return User.findOneAndUpdate({ _id: r._id }, { $set: { pwd } }, {new: true});
   })
   .then(r => {
     if (r) console.log('pwd changed');

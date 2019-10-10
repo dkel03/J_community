@@ -4,21 +4,22 @@ var router = express.Router();
 const Company = require('../../../../models/companys');
 
 /* Routing Methods */
-router.get('/home', function(req, res, next) {
-  // 홈페이지에서 부대정보 받아오기 위한 get
-  Company.findOne({ name: req.user.company })
+router.get('/one', function(req, res, next) {
+  // 토큰에 담겨진 유저정보의 "부대"를 리턴!
+  const _id = req.user._company
+  Company.findOne({ _id })
     .then(r => {
-      res.send({ success: true, company: r, user: req.user, token: req.token});
+      res.send({ success: true, d: r, token: req.token});
     })
     .catch(e => {
       res.send({ success: false });
     });
 });
-router.get('/register', function(req, res, next) {
+router.get('/list', function(req, res, next) {
   // 회원가입시에 존재하는 부대정보 받아오기 위한 get
   Company.find()
-    .then(r => {
-      res.send({ success: true, company: r, token: req.token });
+    .then(rs => {
+      res.send({ success: true, ds: rs, token: req.token });
     })
     .catch(e => {
       res.send({ success: false });

@@ -4,9 +4,8 @@ var router = express.Router();
 const Site = require('../../../../models/sites')
  router.get('/', function(req, res, next) {
   Site.find()
-    .then(r => {
-      console.log(r.title)
-      res.send({ success: true, sites: r, token: req.token  })
+    .then(rs => {
+      res.send({ success: true, ds: rs, token: req.token  })
     })
     .catch(e => {
       res.send({ success: false })
