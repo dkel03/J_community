@@ -10,6 +10,7 @@ import SugDetail from './views/Life/suggestion_detail.vue'
 import Map from './views/Life/map'
 // operate
 import Letter from './views/Operate/letter.vue'
+import LetterDetail from './views/Operate/letter_detail.vue'
 // manage
 import User from './views/Manage/user.vue'
 import Page from './views/Manage/page.vue'
@@ -105,6 +106,11 @@ export default new Router({
       name: '마음의 편지함',
       component: Letter,
       beforeEnter: pageCheck
+    },
+    {
+      path: '/letter/detail/:letterId',
+      name: '마음의 편지 상세',
+      component: LetterDetail
     },
     {
       path: '/user',

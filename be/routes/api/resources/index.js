@@ -7,14 +7,14 @@ router.use('/companys', require('./companys'))
 router.use('/pages', require('./pages'))
 router.use('/sites', require('./sites'));
 
-
+/* 권한에 따른 접근 허용(2이상은 접근불가) */
 router.all('*', (req, res, next) => {
   if (req.user.lv > 2) return next(createError(403, '로그인 후 이용하세요'))
   next()
 })
 
-/* 권한에 따른 접근 허용(2이상은 접근불가) */
 router.use('/suggestions', require('./suggestions'))
+router.use('/letters', require('./letters'))
 
 /* 페이지 없을 시 */
 router.all('*', function(req, res, next) {

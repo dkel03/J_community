@@ -4,7 +4,7 @@
       <v-flex xs12 lg12>
         <v-card>
           <v-card-title>
-            {{company.name}}
+            건의사항
             <div class="flex-grow-1"></div>
             <v-text-field
               v-model="search"
@@ -40,16 +40,16 @@
       <v-dialog v-model="dialog" persistent max-width="600px">
         <v-card>
           <v-card-title>
-            <span class="headline">건의사항</span>
+            <span class="headline">건의사항 작성</span>
           </v-card-title>
           <v-card-text>
             <v-container>
               <v-row>
                 <v-col cols="12">
-                  <v-text-field label="title*" v-model="sug_title" required></v-text-field>
+                  <v-text-field label="title*" v-model="form.title" required></v-text-field>
                 </v-col>
                 <v-col cols="12">
-                  <v-textarea label="context*" v-model="sug_context" required></v-textarea>
+                  <v-textarea label="context*" v-model="form.context" required></v-textarea>
                 </v-col>
               </v-row>
             </v-container>
@@ -72,14 +72,11 @@ export default {
   name: 'suggestion',
   data () {
     return {
-      header: '전체 건의사항',
-      like_icon: 'favorite',
       dialog: false,
-      company: {
-        name: '비로그인'
+      form: {
+        title: '',
+        context: ''
       },
-      sug_title: '',
-      sug_context: '',
       updateMode: false,
       search: '',
       articles: [],
@@ -94,7 +91,6 @@ export default {
     }
   },
   created () {
-    this.getCompany()
     this.getSuggestions()
   },
   methods: {
@@ -106,17 +102,8 @@ export default {
     mdUp () {
       this.dialog = true
       this.updateMode = false
-      this.sug_title = ''
-      this.sug_context = ''
-    },
-    getCompany () {
-      this.$axios.get('resources/companys/one')
-        .then((r) => {
-          this.company = r.data.d
-        })
-        .catch((e) => {
-          if (!e.response) this.$store.commit('pop', { msg: e.message, color: 'error' })
-        })
+      this.form.title = ''
+      this.form.context = ''
     },
     getSuggestions () {
       if (this.loading) return
@@ -137,7 +124,7 @@ export default {
     },
     postSuggestion () {
       this.dialog = false
-      axios.post('resources/suggestions', { title: this.sug_title, context: this.sug_context })
+      axios.post('resources/suggestions', this.form)
         .then((r) => {
           this.$store.commit('pop', { msg: '건의사항 등록완료', color: 'success' })
           this.getSuggestions()
