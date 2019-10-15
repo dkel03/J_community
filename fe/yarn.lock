@@ -8314,6 +8314,11 @@ vue-template-es2015-compiler@^1.9.0:
   resolved "https://registry.yarnpkg.com/vue-template-es2015-compiler/-/vue-template-es2015-compiler-1.9.1.tgz#1ee3bc9a16ecbf5118be334bb15f9c46f82f5825"
   integrity sha512-4gDntzrifFnCEvyoO8PqyJDmguXgVPxKiIxrBKjIowvL9l+N66196+72XVYR8BBf1Uv1Fgt3bGevJ+sEmxfZzw==
 
+vue-trend@^0.0.0:
+  version "0.0.0"
+  resolved "https://registry.yarnpkg.com/vue-trend/-/vue-trend-0.0.0.tgz#d10fc5e77bd36f7f68fd77d40ae68eaededce694"
+  integrity sha1-0Q/F53vTb39o/XfUCuaOrt7c5pQ=
+
 vue@^2.6.10:
   version "2.6.10"
   resolved "https://registry.yarnpkg.com/vue/-/vue-2.6.10.tgz#a72b1a42a4d82a721ea438d1b6bf55e66195c637"
@@ -8330,6 +8335,11 @@ vuetify@^2.0.0:
   version "2.0.17"
   resolved "https://registry.yarnpkg.com/vuetify/-/vuetify-2.0.17.tgz#824dc9e640fc249a4fe37a1757206dbc9fed3492"
   integrity sha512-pBtwwF2SnZDfr2MPj5kA5VFUL9tjFVK4ca1+dUfw1LZS8AtJfOl70agpSMqcItehzESddIPsDu5sp/JOFCOygA==
+
+vuetrend@^0.3.4:
+  version "0.3.4"
+  resolved "https://registry.yarnpkg.com/vuetrend/-/vuetrend-0.3.4.tgz#35e1dafb0f7cf4d66f69e289ee7028b9e12783d9"
+  integrity sha512-UaOJhMnkoiRBlGB9k2FX5GqotJyoyYUpyTAjfBiB7K5ESt3KzRoaplfG7j7SAnH4ITk4DjVDC9WB2IX80TVYmQ==
 
 vuex@^3.0.1:
   version "3.1.1"

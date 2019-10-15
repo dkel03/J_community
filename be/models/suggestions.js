@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 
+mongoose.set('useFindAndModify', false);
 const suggestionSchema = new mongoose.Schema({
 	title: { type: String, default: ''},
 	context: { type: String, default: '내용이 없습니다'},

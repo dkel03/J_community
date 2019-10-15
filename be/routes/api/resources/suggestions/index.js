@@ -7,7 +7,7 @@ const Suggestion = require('../../../../models/suggestions');
 /* Routing Methods */
 router.get('/one/:id', function(req, res, next) {
   const sugId = req.params.id
-  Suggestion.findOne({ _id: sugId }).populate('_user', 'name')
+  Suggestion.findOneAndUpdate({ _id: sugId }, { $inc: { "cnt.view": 1 } }, {}).populate('_user', 'name')
     .then(r => {
       res.send({ success: true, d: r, token: req.token });
     })

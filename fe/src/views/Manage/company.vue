@@ -23,7 +23,7 @@
       </v-flex>
     </v-layout>
 
-    <v-btn absolute dark fab bottom right color="green darken-4" @click="mdUp">
+    <v-btn absolute dark right color="green darken-4" @click="mdUp">
      <v-icon>add</v-icon>
     </v-btn>
 

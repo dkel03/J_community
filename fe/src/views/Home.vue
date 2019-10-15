@@ -1,112 +1,104 @@
 <template>
-  <v-container grid-list-md>
-    <v-layout row wrap>
-      <div v-if="company">
-        <v-flex xs12 sm6 md4>
-          <v-card min-width="344">
-            <v-card-title>{{company.name}} 중대숲</v-card-title>
-            <v-card-text>{{company.phoneNumber}}</v-card-text>
-            <v-card-actions>
-              <v-btn text>Click</v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-flex>
-      </div>
-      <div v-else>
-        <v-flex xs12 sm6 md4>
-          <v-card min-width="344">
-            <v-card-title>중대숲</v-card-title>
-            <v-card-text>로그인을 해주세요!!</v-card-text>
-            <v-card-actions>
-              <v-btn text>Click</v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-flex>
-      </div>
-    </v-layout>
-    <v-btn absolute dark fab bottom right color="green darken-4" @click="mdUp">
-     <v-icon>mail</v-icon>
-    </v-btn>
+  <v-container dark fluid :grid-list-md="!$vuetify.breakpoint.xs">
+    <v-layout wrap row>
+      <v-flex xs12 sm6 md3 class="pb-2">
+        <small-card
+          title="최근 게시물"
+          number="343"
+          tIcon="list"
+          tIconColor="success"
+          bIcon="update"
+          bIconColor="primary"
+          bText="3시간 전"
+        ></small-card>
+      </v-flex>
+      <v-flex xs12 sm6 md3 class="pb-2">
+        <small-card
+          title="전체 사용자"
+          number="12"
+          tIcon="person"
+          tIconColor="primary"
+          bIcon="group"
+          bIconColor="success"
+          bText="2명 접속중"
+        ></small-card>
+      </v-flex>
 
-    <v-dialog v-model="dialog" persistent max-width="600px">
-      <v-card>
-        <v-card-title>
-          <span class="headline">마음의 편지</span>
-        </v-card-title>
-        <v-card-text>
-          <v-container>
-            <v-row>
-              <v-col cols="12">
-                <v-text-field label="제목" v-model="form.title" required></v-text-field>
-              </v-col>
-              <v-col cols="12">
-                <v-textarea label="내용" v-model="form.context" required></v-textarea>
-              </v-col>
-            </v-row>
-          </v-container>
-          <small>마음의 편지는 익명으로 전달되나, 부적절한 내용작성 시에 유저정보를 조회할 수 있습니다.</small>
-          <br>
-          <small>또한 수정이 불가하니, 신중히 작성하시기 바랍니다.</small>
-        </v-card-text>
-        <v-card-actions>
-          <div class="flex-grow-1"></div>
-          <v-btn color="blue darken-1" text @click="dialog = false">Close</v-btn>
-          <v-btn color="blue darken-1" text @click="postLetter">Save</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+      <v-flex xs12 sm6 md3 class="pb-2">
+        <small-card
+          title="전체 조회수"
+          number="431"
+          tIcon="visibility"
+          tIconColor="info"
+          bIcon="trending_down"
+          bIconColor="error"
+          bText="43 감소"
+        ></small-card>
+      </v-flex>
+
+      <v-flex xs12 sm6 md3 class="pb-2">
+        <small-card
+          title="전체 게시물"
+          number="334234"
+          tIcon="view_module"
+          tIconColor="warning"
+          bIcon="trending_up"
+          bIconColor="success"
+          bText="256 증가"
+        ></small-card>
+      </v-flex>
+
+      <v-flex xs12 sm4 class="pb-2">
+        <trend-card
+          title="주간 게시물 현황"
+          :data="[4, 7, 9, 5, 6, 4, 5]"
+          :gradient="['#6fa8dc', '#42b983', '#2c3e50']"
+        ></trend-card>
+      </v-flex>
+      <v-flex xs12 sm4 class="pb-2">
+        <trend-card
+          title="주간 사용자 현황"
+          :data="[3, 1, 2, 1, 0, 4, 2]"
+          :gradient="['red', 'orange', 'yellow']"
+        ></trend-card>
+      </v-flex>
+      <v-flex xs12 sm4 class="pb-2">
+        <trend-card
+          title="주간 조회수 현황"
+          :data="[33, 22, 2, 43, 33, 1, 55]"
+          :gradient="['blue', 'green', 'sky']"
+        ></trend-card>
+      </v-flex>
+
+      <v-flex xs12 sm6 class="pb-2">
+        <board-card
+          title="공지사항"
+          tBarLeftIcon="notifications"
+          tBarColor="success"
+          tBarRightIcon="more_horiz"
+        ></board-card>
+      </v-flex>
+      <v-flex xs12 sm6 class="pb-2">
+        <board-card
+          title="건의사항"
+          tBarLeftIcon="chat"
+          tBarColor="success"
+          tBarRightIcon="more_horiz"
+        ></board-card>
+      </v-flex>
+    </v-layout>
   </v-container>
 </template>
 <script>
-import axios from 'axios'
+import smallCard from '@/components/dashboard/smallCard'
+import trendCard from '@/components/dashboard/trendCard'
+import boardCard from '@/components/dashboard/boardCard'
+
 export default {
-  data () {
-    return {
-      dialog: false,
-      form: {
-        title: '',
-        context: ''
-      },
-      company: {}
-    }
-  },
-  mounted () {
-    this.getCompany()
-  },
-  watch: {
-    '$store.state.token': {
-      handler () {
-        this.getCompany() // 전역 토큰변수를 감시하여 로그아웃 시에 다시 getCompany요청 보내기
-      }
-    }
-  },
-  methods: {
-    mdUp () {
-      this.dialog = true
-      this.updateMode = false
-      this.form.title = ''
-      this.form.context = ''
-    },
-    getCompany () {
-      axios.get('resources/companys/one')
-        .then((r) => {
-          console.log(r)
-          this.company = r.data.d
-        })
-        .catch((e) => {
-          if (!e.response) this.$store.commit('pop', { msg: e.message, color: 'error' })
-        })
-    },
-    postLetter () {
-      this.dialog = false
-      axios.post('resources/letters', this.form)
-        .then((r) => {
-          this.$store.commit('pop', { msg: '마음의 편지 작성완료', color: 'success' })
-        })
-        .catch((e) => {
-          if (!e.response) this.$store.commit('pop', { msg: e.message, color: 'error' })
-        })
-    }
+  components: {
+    smallCard,
+    trendCard,
+    boardCard
   }
 }
 </script>

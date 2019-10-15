@@ -31,12 +31,10 @@
             </template>
           </v-data-table>
         </v-card>
+        <div class="text-right">
+          <v-btn class="mt-3" color="green darken-3" dark @click="mdUp">글쓰기</v-btn>
+        </div>
       </v-flex>
-
-      <v-btn absolute dark fab bottom right color="green darken-4" @click="mdUp">
-       <v-icon>add</v-icon>
-      </v-btn>
-
       <v-dialog v-model="dialog" persistent max-width="600px">
         <v-card>
           <v-card-title>
@@ -46,14 +44,14 @@
             <v-container>
               <v-row>
                 <v-col cols="12">
-                  <v-text-field label="title*" v-model="form.title" required></v-text-field>
+                  <v-text-field label="제목" v-model="form.title" required></v-text-field>
                 </v-col>
                 <v-col cols="12">
-                  <v-textarea label="context*" v-model="form.context" required></v-textarea>
+                  <v-textarea label="내용" v-model="form.context" required></v-textarea>
                 </v-col>
               </v-row>
             </v-container>
-            <small>*indicates required field</small>
+            <small>부적절한 내용은 처벌의 대상이 될 수 있습니다.</small>
           </v-card-text>
           <v-card-actions>
             <div class="flex-grow-1"></div>
