@@ -49,7 +49,7 @@
 </template>
 <script>
 export default {
-  props: ['title', 'tBarRightIcon','tBarColor', 'tBarLeftIcon'],
+  props: ['title', 'tBarRightIcon', 'tBarColor', 'tBarLeftIcon'],
   data: () => ({
     items: [
       { header: 'Today' },

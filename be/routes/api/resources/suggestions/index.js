@@ -2,14 +2,25 @@ var express = require('express');
 var createError = require('http-errors');
 var router = express.Router();
 const Suggestion = require('../../../../models/suggestions');
+const Comment = require('../../../../models/comments');
 
 
 /* Routing Methods */
 router.get('/one/:id', function(req, res, next) {
   const sugId = req.params.id
-  Suggestion.findOneAndUpdate({ _id: sugId }, { $inc: { "cnt.view": 1 } }, {}).populate('_user', 'name')
+  let sug = {}
+  
+  Suggestion.findOneAndUpdate({ _id: sugId }, { $inc: { "cnt.view": 1 } }, { new: true }).populate('_user', 'name').lean()
     .then(r => {
-      res.send({ success: true, d: r, token: req.token });
+      if (!r) throw new Error('잘못된 게시물입니다.')
+      atc = r
+      atc._comments = []
+      return Comment.find({ _suggestion: atc._id }).populate({ path: '_user', select: 'id name'}).sort({ _id: 1}) //.limit(5)
+    })
+    .then(rs => {
+      if (rs) atc._comments =rs
+      console.log(atc)
+      res.send({ success: true, d: atc, token: req.token})
     })
     .catch(e => {
       res.send({ success: false });

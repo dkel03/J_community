@@ -1,5 +1,5 @@
 <template>
-  <v-container grid-list-md text-xs-center>
+  <v-container fluid grid-list-md text-xs-center>
     <v-card class="mx-auto" min-width="344">
       <v-card-title>
         <span class="title font-weight-bold">{{item.title}}</span>
@@ -49,6 +49,39 @@
         </v-list-item>
       </v-card-actions>
     </v-card>
+    <v-card class="mt-7 mx-auto" min-width="344">
+      <v-card-title>
+        <v-icon class="mr-3">chat</v-icon>
+        <span class="title font-weight-bold">
+          댓글
+          <v-chip label outlined class="title">{{comments.length}}</v-chip>
+          개
+        </span>
+      </v-card-title>
+
+      <v-divider></v-divider>
+      
+      <v-flex class="pa-3">
+        <v-alert type="warning" v-if="comments.length === 0">
+            아직 댓글이 없습니다
+        </v-alert>
+      </v-flex>
+      <v-flex class="pa-3" v-for="item in comments" :key="item">
+        <comment-card
+          :comment="item"
+          :createdAt="id2date(item._id)"
+          @del="getSuggestion(suggestionId)"
+        ></comment-card>
+      </v-flex>
+      
+      <v-divider></v-divider>
+      <v-layout wrap row class="pa-5">
+        <v-flex sm10>
+          <v-text-field label="댓글 작성" dense outlined counter="200" v-model="cmtForm.context"></v-text-field>
+        </v-flex>
+        <v-btn class="ma-2" dark large color="green darken-4" @click="postComment">작성</v-btn>
+      </v-layout>
+    </v-card>
 
     <v-dialog v-model="dialog" persistent max-width="600px">
       <v-card>
@@ -80,21 +113,24 @@
 
 <script>
 import axios from 'axios'
-
+import commentCard from '@/components/suggestion/commentCard'
 export default {
+  components: {
+    commentCard
+  },
   data () {
     const suggestionId = this.$route.params.suggestionId
     return {
-      menus: [
-        { name: '수정' },
-        { name: '삭제' }
-      ],
       suggestionId: suggestionId,
       form: {
         title: '',
         context: ''
       },
+      cmtForm: {
+        context: ''
+      },
       item: {},
+      comments: [],
       like_icon: 'favorite',
       more: 'more-vert',
       dialog: false
@@ -108,6 +144,7 @@ export default {
       axios.get(`resources/suggestions/one/${sugId}`)
         .then((r) => {
           this.item = r.data.d
+          this.comments = r.data.d._comments
           this.form.title = this.item.title
           this.form.context = this.item.context
         })
@@ -135,6 +172,17 @@ export default {
           this.$router.push({
             path: '/suggestion'
           })
+        })
+        .catch((e) => {
+          if (!e.response) this.$store.commit('pop', { msg: e.message, color: 'error' })
+        })
+    },
+    postComment () {
+      axios.post(`resources/comments/${this.suggestionId}`, this.cmtForm)
+        .then((r) => {
+          this.$store.commit('pop', { msg: '댓글 작성완료', color: 'success' })
+          this.getSuggestion(this.suggestionId)
+          this.cmtForm.context = ''
         })
         .catch((e) => {
           if (!e.response) this.$store.commit('pop', { msg: e.message, color: 'error' })

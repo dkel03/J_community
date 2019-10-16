@@ -1,5 +1,5 @@
 <template>
-  <v-container grid-list-md text-xs-center>
+  <v-container fluid grid-list-md text-xs-center>
     <v-card class="mx-auto" min-width="344">
       <v-card-title>
         <span class="title font-weight-bold">{{item.title}}</span>

@@ -1,10 +1,26 @@
 <template>
   <v-container dark fluid :grid-list-md="!$vuetify.breakpoint.xs">
-    <v-layout wrap row>
+    <v-layout wrap row  v-if="company">
+      <v-flex xs12 class="pb-2">
+        <v-card
+          class="mx-auto"
+        >
+          <v-img
+            class="white--text align-end"
+            height="200px"
+            src="https://cdn.vuetifyjs.com/images/cards/docks.jpg"
+          >
+            <v-card-title>{{company.name}}</v-card-title>
+          </v-img>
+          <v-card-text class="text--primary">
+            <div>{{company.phoneNumber}}</div>
+          </v-card-text>
+        </v-card>
+      </v-flex>
       <v-flex xs12 sm6 md3 class="pb-2">
         <small-card
-          title="최근 게시물"
-          number="343"
+          title="최근 건의사항"
+          number="10"
           tIcon="list"
           tIconColor="success"
           bIcon="update"
@@ -14,8 +30,8 @@
       </v-flex>
       <v-flex xs12 sm6 md3 class="pb-2">
         <small-card
-          title="전체 사용자"
-          number="12"
+          title="전체 중대원"
+          number="98"
           tIcon="person"
           tIconColor="primary"
           bIcon="group"
@@ -87,18 +103,56 @@
         ></board-card>
       </v-flex>
     </v-layout>
+    <v-layout v-else>
+      <v-flex xs12 class="pb-2">
+        <v-card
+          class="mx-auto"
+        >
+          <v-img
+            class="white--text align-end"
+            height="200px"
+            src="https://cdn.vuetifyjs.com/images/cards/docks.jpg"
+          >
+            <v-card-title>비로그인</v-card-title>
+          </v-img>
+          <v-card-text class="text--primary">
+            <div>로그인해주세요!!</div>
+          </v-card-text>
+        </v-card>
+      </v-flex>
+    </v-layout>
   </v-container>
 </template>
 <script>
 import smallCard from '@/components/dashboard/smallCard'
 import trendCard from '@/components/dashboard/trendCard'
 import boardCard from '@/components/dashboard/boardCard'
-
+import axios from 'axios'
 export default {
   components: {
     smallCard,
     trendCard,
     boardCard
+  },
+  data () {
+    return {
+      company: {}
+    }
+  },
+  mounted () {
+    this.getCompany()
+  },
+  methods: {
+    getCompany () {
+      this.$axios.get('resources/companys/one')
+        .then((r) => {
+          console.log(r)
+          this.company = r.data.d
+        })
+        .catch((e) => {
+          if (!e.response) this.$store.commit('pop', { msg: e.message, color: 'error' })
+        })
+    },
   }
 }
 </script>

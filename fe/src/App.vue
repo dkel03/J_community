@@ -8,15 +8,12 @@
       app
     >
       <v-list>
-        <v-list-item>
+        <v-list-item link>
           <v-list-item-avatar>
             <v-img src="https://cdn.vuetifyjs.com/images/john.png"></v-img>
           </v-list-item-avatar>
-        </v-list-item>
-        <v-list-item link v-if="!mini">
-          <v-list-item-content>
-            <v-list-item-title class="title">김장영</v-list-item-title>
-            <v-list-item-subtitle>dkel03@korea.ac.kr</v-list-item-subtitle>
+          <v-list-item-content v-if="!mini">
+            <v-list-item-title>김장영</v-list-item-title>
           </v-list-item-content>
           <v-list-item-action>
             <v-btn icon @click.native.stop="mini = !mini">

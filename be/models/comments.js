@@ -1,19 +1,17 @@
 const mongoose = require('mongoose');
 
 mongoose.set('useFindAndModify', false);
-const suggestionSchema = new mongoose.Schema({
-	title: { type: String, default: ''},
+const commentSchema = new mongoose.Schema({
 	context: { type: String, default: '내용이 없습니다'},
 	cnt: {
     view: { type: Number, default: 0 },
     like: { type: Number, default: 0 }
   },
   ip: { type: String, default: '' },
-  _comments: [],
   _user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', index: true },
-  _company: { type: mongoose.Schema.Types.ObjectId, ref: 'Company', index: true }
+  _suggestion: { type: mongoose.Schema.Types.ObjectId, ref: 'Suggestion', index: true }
 });
 
-const Suggestion = mongoose.model('Suggestion', suggestionSchema);
+const Comment = mongoose.model('Comment', commentSchema);
 
-module.exports = Suggestion
+module.exports = Comment
