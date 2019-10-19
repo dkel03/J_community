@@ -14,6 +14,7 @@ const userSchema = new mongoose.Schema({
   inCnt: { type: Number, default: 0 }, //add
   retry: { type: Number, default: 0 },
   _company: { type: mongoose.Schema.Types.ObjectId, ref: 'Company', index: true },
+  img: { type: String, default: '' }
 });
 
 const User = mongoose.model('User', userSchema);

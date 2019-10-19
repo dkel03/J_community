@@ -16,11 +16,15 @@ import User from './views/Manage/user.vue'
 import Page from './views/Manage/page.vue'
 import Company from './views/Manage/company.vue'
 import Site from './views/Manage/site'
+// extra
+import UserInfo from './views/userInfo.vue'
 
 Vue.use(Router)
 
 Vue.prototype.$axios = axios
 const apiRootPath = process.env.NODE_ENV !== 'production' ? 'https://nemv-stack.run.goorm.io/api/' : '/api/'
+Vue.prototype.$apiRootPath = apiRootPath
+
 axios.defaults.baseURL = apiRootPath // axios기본 요청 url 추가
 axios.defaults.headers.common['Authorization'] = (localStorage.getItem('token') || 'inval')
 // 기본적으로 axios 요청보낼때 header에 토큰 추가해서 보냄
@@ -82,6 +86,12 @@ export default new Router({
       path: '/',
       name: 'home',
       component: Home,
+      beforeEnter: pageCheck
+    },
+    {
+      path: '/userInfo',
+      name: 'userInfo',
+      component: UserInfo,
       beforeEnter: pageCheck
     },
     {

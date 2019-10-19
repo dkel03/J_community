@@ -1,6 +1,6 @@
 <template>
   <v-container dark fluid :grid-list-md="!$vuetify.breakpoint.xs">
-    <v-layout wrap row  v-if="company">
+    <v-layout wrap row  v-if="$store.state.token">
       <v-flex xs12 class="pb-2">
         <v-card
           class="mx-auto"
@@ -113,9 +113,10 @@
             height="200px"
             src="https://cdn.vuetifyjs.com/images/cards/docks.jpg"
           >
-            <v-card-title>비로그인</v-card-title>
+            <v-card-title>비로그인 상태</v-card-title>
           </v-img>
           <v-card-text class="text--primary">
+            <div>중대숲은 로그인 후 이용가능 합니다</div>
             <div>로그인해주세요!!</div>
           </v-card-text>
         </v-card>
@@ -127,7 +128,6 @@
 import smallCard from '@/components/dashboard/smallCard'
 import trendCard from '@/components/dashboard/trendCard'
 import boardCard from '@/components/dashboard/boardCard'
-import axios from 'axios'
 export default {
   components: {
     smallCard,
@@ -152,7 +152,7 @@ export default {
         .catch((e) => {
           if (!e.response) this.$store.commit('pop', { msg: e.message, color: 'error' })
         })
-    },
+    }
   }
 }
 </script>

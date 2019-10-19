@@ -49,18 +49,19 @@
         </v-list-item>
       </v-card-actions>
     </v-card>
-    <v-card class="mt-7 mx-auto" min-width="344">
+    <v-card dense class="mt-7 mx-auto" min-width="344">
       <v-card-title>
         <v-icon class="mr-3">chat</v-icon>
         <span class="title font-weight-bold">
           댓글
-          <v-chip label outlined class="title">{{comments.length}}</v-chip>
-          개
+          <v-chip label outlined class="subtitle-1">
+            {{comments.length}}
+          </v-chip>
         </span>
       </v-card-title>
 
       <v-divider></v-divider>
-      
+
       <v-flex class="pa-3">
         <v-alert type="warning" v-if="comments.length === 0">
             아직 댓글이 없습니다
@@ -73,7 +74,7 @@
           @del="getSuggestion(suggestionId)"
         ></comment-card>
       </v-flex>
-      
+
       <v-divider></v-divider>
       <v-layout wrap row class="pa-5">
         <v-flex sm10>

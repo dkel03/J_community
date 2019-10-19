@@ -8,12 +8,12 @@
       app
     >
       <v-list>
-        <v-list-item link>
+        <v-list-item link @click="$router.push('/userInfo')">
           <v-list-item-avatar>
-            <v-img src="https://cdn.vuetifyjs.com/images/john.png"></v-img>
+            <v-img :src="$store.state.user.img"></v-img>
           </v-list-item-avatar>
           <v-list-item-content v-if="!mini">
-            <v-list-item-title>김장영</v-list-item-title>
+            <v-list-item-title>{{$store.state.user.name}}</v-list-item-title>
           </v-list-item-content>
           <v-list-item-action>
             <v-btn icon @click.native.stop="mini = !mini">
@@ -46,7 +46,7 @@
               <v-list-item-title v-text="item.title"></v-list-item-title>
             </v-list-item-content>
           </template>
-          <v-list-item dense flat
+          <v-list-item dense
             v-for="subItem in item.subItems"
             :key="subItem.title"
             :prepend-icon="subItem.icon"
@@ -131,7 +131,6 @@
      >
        {{ $store.state.sb.msg }}
        <v-btn
-         flat
          @click="$store.commit('pop', { act: false })"
          color="blue-grey"
        >
