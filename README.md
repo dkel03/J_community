@@ -6,7 +6,15 @@
 - **vue.js(프론트엔드):** 화면구성  
 - **vuetify.js(프론트엔드):** 머터리얼 화면구성  
 ---
+### 초기 setting
+- node.js 설치
+- mongoDB 설치 혹은 mongodb Atlas 사용
+- git clone 이후 be & fe에서 yarn install
+- config 파일 설정
+- fe에서 apiRootPath를 localhost로 설정
+- 웹상에서 관리자 계정으로 모든 페이지를 클릭하여 페이지 생성
 
+---
 ### 구현 세부 정보
 ##### 백엔드
 - **REST ful**한 API
@@ -17,6 +25,7 @@
 - 오픈소스이므로 **config**파일을 통한 핵심 설정파일(서버주소, 보안 등) 분리
 - token 발급 및 갱신 로직 (**JWT**: jsonwebtoken 모듈사용)
 - **moment.js** 모듈 도입(토큰 재발급시 사용)
+- **multer, sharp, image-data-uri**모듈 사용으로 이미지를 DB에 저장
 
 ##### 프론트엔드
 - 로그인시 **localStorage**에 **token**정보 저장
@@ -38,11 +47,31 @@ if(!e.response) this.$store.commit('pop', { msg: e.message, color: 'error' })
 
 ```javascript
 module.exports = {
-	dbUrl: 'mongodb://localhost:27017/nemv'
+  dbUrl: 'mongodb://localhost:27017/nemv',
+  admin: {
+    id: String
+    pwd: String
+    name: '관리자',
+    number: String,
+    company: String
+  },
+  company: {
+    name: String,
+    phoneNumber: String
+  },
+  jwt: {
+    secretKey: String,
+    subject: 'token',
+    issuer: 'xxx.com',
+    algorithm: 'HS256',    
+    expiresIn: 60 * 3, // 기본 3분
+    expiresInRemember: 60 * 60 * 24 * 6 ,// 기억하기 눌렀을 때 6일
+    expiresInDiv: 3 // 토큰시간 나누는 기준
+  },
 }
 ```
 
-이런식으로 디비 연결 문자열을 작성해야 웹서버가 정상 구동됨.
+이런식으로 관리자 계정, 초기부대정보, 디비 연결 문자열 등을 작성해야 웹서버가 정상 구동됨.
 
 ### 지도 API관련
 - 지금 마커의 좌표 -> 주소 정보까지 불러옴

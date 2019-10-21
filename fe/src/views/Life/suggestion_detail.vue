@@ -33,7 +33,7 @@
       <v-card-actions>
         <v-list-item class="grow">
           <v-list-item-avatar color="grey darken-3">
-            <v-img class="elevation-6" src="../../assets/army2.png"></v-img>
+            <v-img class="elevation-6" :src="item._user.img"></v-img>
           </v-list-item-avatar>
 
           <v-list-item-content>

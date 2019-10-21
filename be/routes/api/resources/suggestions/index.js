@@ -10,12 +10,12 @@ router.get('/one/:id', function(req, res, next) {
   const sugId = req.params.id
   let sug = {}
   
-  Suggestion.findOneAndUpdate({ _id: sugId }, { $inc: { "cnt.view": 1 } }, { new: true }).populate('_user', 'name').lean()
+  Suggestion.findOneAndUpdate({ _id: sugId }, { $inc: { "cnt.view": 1 } }, { new: true }).populate('_user', 'name img').lean()
     .then(r => {
       if (!r) throw new Error('잘못된 게시물입니다.')
       atc = r
       atc._comments = []
-      return Comment.find({ _suggestion: atc._id }).populate({ path: '_user', select: 'id name'}).sort({ _id: 1}) //.limit(5)
+      return Comment.find({ _suggestion: atc._id }).populate({ path: '_user', select: 'id name img'}).sort({ _id: 1}) //.limit(5)
     })
     .then(rs => {
       if (rs) atc._comments =rs

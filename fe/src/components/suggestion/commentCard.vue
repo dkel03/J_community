@@ -4,7 +4,7 @@
       <v-card min-width="300" dark color="grey darken-2">
         <v-card-title>
           <v-avatar class="mr-3" size="28" color="grey darken-3">
-            <v-img class="elevation-6" src="../../assets/army2.png"></v-img>
+            <v-img class="elevation-6" :src="comment._user.img"></v-img>
           </v-avatar>
           <span class="body-1 mr-3">{{comment._user.name}}</span>
           <span class="caption font-weight-light mt-1">{{createdAt}}</span>
