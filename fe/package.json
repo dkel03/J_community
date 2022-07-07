@@ -12,7 +12,7 @@
     "filepond": "^4.7.2",
     "filepond-plugin-file-validate-type": "^1.2.4",
     "filepond-plugin-image-preview": "^4.5.0",
-    "moment": "^2.24.0",
+    "moment": "^2.29.4",
     "vee-validate": "2.2.15",
     "vue": "^2.6.10",
     "vue-daum-map": "^1.0.15",
