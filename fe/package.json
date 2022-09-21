@@ -19,7 +19,7 @@
     "vue-filepond": "^5.1.3",
     "vue-router": "^3.0.3",
     "vue-trend": "^0.0.0",
-    "vuetify": "^2.0.0",
+    "vuetify": "^2.6.10",
     "vuetrend": "^0.3.4",
     "vuex": "^3.0.1"
   },
